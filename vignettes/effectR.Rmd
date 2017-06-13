@@ -1,0 +1,177 @@
+---
+title: "effectR: An R package to call oomycete effectors"
+author: "Javier F. Tabima"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The `effectR` package is an R package designed to call oomycete RxLR and CRN effectors by searching for the motifs of interest using regular expression searches and hidden markov models (HMM). 
+
+# Overview
+
+The `effectR` packages searches for the motifs of interest (RxLR-EER motif for RxLR effectors and LFLAK motif for CRN effectors) using a regular expression search (`REGEX`). 
+These motifs used by the REGEX `effectR` search have been reported in the literature (Haas et al., 2009, Stam et al., 2004).
+
+The `effectR` package aligns the REGEX search results using [`MAFFT`](http://mafft.cbrc.jp/alignment/software/), and builds a HMM profile based on the multiple sequence alignment result using the `hmmbuild` program from [`HMMER`](http://hmmer.org/). The HMM profile is used to search across ORF of the genome of interest using the `hmmsearch` binary from `HMMER`. 
+The search step will retain sequences with significant hits to the profile of interest. 
+`effectR` also combines the redundant sequences found in both REGEX and HMM searches into a single dataset that can be easily exported. 
+In addition, `effectR` reads and returns the HMM profile to the user and allows for the creation of a [MOTIF logo-like plot](https://en.wikipedia.org/wiki/Sequence_logo) using `ggplot2`.
+
+## Requirements
+
+- R packages:
+ - [`seqinr`]()
+ - [`ggplot2`]()
+ 
+- External software 
+  - [`MAFFT`]()
+  - [`HMMER`]()
+  
+## Data input
+
+The `effectR` package is designed to work with amino acid sequences in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format) representing the six-frame translation of every open reading frame (ORF) of an oomycete genome. 
+Using the six-frame translation of all ORF's in a genome is recommended in order to obtain as many effectors as possible from a proteome. 
+To obtain the ORF for a genome, we recommend the use of EMBOSS' [`getorf`](http://emboss.sourceforge.net/apps/cvs/emboss/apps/getorf.html).
+
+`effectR` uses a list of sequences of the class `SeqFastadna` in order to perform the effector searches. 
+The function `read.fasta` from the `seqinr` package reads the FASTA amino acid file into R, creating a list of `SeqFastadna` objects that represent each of the translated ORF's from the original FASTA file. 
+We will begin our example using a subset of translated ORF's from the *P. infestans* genome sequenced by Haas et al., (2009):
+
+```{r}
+library(effectR)
+pkg <- "effectR"
+fasta.file <- system.file("extdata", "test_infestans.fasta", package = pkg)
+library(seqinr)
+ORF <- read.fasta(fasta.file)
+head(ORF, n = 2)
+```
+
+We have created a `ORF` object that includes the list of translated ORF's from the subset of XX ORF's from the *P. infestans* genome. For more information on the `SeqFastadna` objects please read the [`seqinr manual`](https://cran.r-project.org/web/packages/seqinr/seqinr.pdf).
+
+
+## REGEX search
+
+To perform the effector search, `effectR` searches for the motifs of interest found in RxLR and CRN motifs. 
+We have created the function `regex.search` to perform the seach of the motif of interest. 
+The function `regex.search` requires the list of `SeqFastadna` objects and the gene family of interest. 
+Here we show an example to search for sequences with RxLR-EER motifs from the XX ORF subset of *P. infestans*.
+This ORF example data set contains 17 sequences with RxLR-EER motifs and XX sequences with the LFLAK motifs found in CRN effectors. 
+We expect to find, then, 17 sequences after using the `regex.search` function with the `motif='RxLR'` parameter:
+
+```{r}
+REGEX <- regex.search(sequence = ORF, motif = "RxLR")
+length(REGEX)
+```
+
+We observe that the `REGEX` object has 17 sequences with the RxLR motif. These sequences will be aligned using `MAFFT`, and used to build a HMM profile to search for similar sequences.
+
+## Multiple sequence alignment and HMMER search
+
+To perform the HMM search and obtain all possible effector candidates from a proteome, `effectR` uses the `REGEX` results as a template to create a HMM profile and perform a search across the proteome of interest.
+We have created the `hmm.search` function in order to perfomr this search.
+The `hmm.search` function requires a local installation of `MAFFT` and `HMMER` in order to perform the searches. The *absolute paths* of the binaries must be specified in the `mafft.path` and `hmmer.path` options of the `hmm.search` function.
+In addition, the `hmm.function` requires the path of the original FASTA file containing the translated ORF's in the `original.seq` parameter of the function. `hmm.search` will use this file as a query in the `hmmsearch` software from HMMER, and search for all sequences with hits against the HMM profile created with the REGEX results.
+
+We will continue or example by performing a `hmm.search` in our example data set. We will include the original example FASTA file location (stored in the `fasta.file` object), the location of the `MAFFT` binary and the location of the HMMER binaries:
+
+```{r}
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = ORF, mafft.path = "/usr/local/bin/", hmm.path = "/usr/local/bin/")
+```
+
+The `hmm.search` function has resulted in 27 effector candidates. 
+As a reminder, we used the `REGEX` results of an RxLR motif search, so we can consider this `hmm.search` results as RxLR candidate effectors.
+To obtain the CRN candidate effectors we should go back to the `regex.search` step and modify the `motif` parameter to `motif="CRN` and perform the `hmm.search` again.
+
+The `hmm.search` object returns a list of 3 elements: 
+
+1. The REGEX sequences used to build the HMM profile in a `SeqFastadna` class
+2. The sequences from the original translated ORF files with hits to the HMM profile in a `SeqFastadna` class
+3. The HMM profile table created by HMMER's `hmmbuild` as a data frame
+
+We can access each one of these elements by using the `$` operator in the object obtained from `hmm.search`:
+
+### REGEX results
+
+```{r}
+head(candidate.rxlr$REGEX, n = 2)
+```
+
+### HMMER results
+
+```{r}
+head(candidate.rxlr$HMM, n = 2)
+```
+
+### HMM profile
+
+```{r}
+head(candidate.rxlr$HMM_Table)
+```
+
+We have included each of these elements to provide the user with the most complete information possible from each of the steps performed until here. 
+
+## Obtaining non-redundant effectors and motif summaries
+
+The user can extract all of the non-redundant sequences and a summary table with the information about the motifs using the `effector.summary` function. 
+This function uses the results from either `hmm.seach` or `regex.search` functions to generate a table that includes the name of the candidate effector sequence, the number of motifs of interest (RxLR-EER or LFLAK-HVLV) per sequence and its location within the sequence. 
+In addition, when the `effector.summary` function is used in an object that contains the results of `hmm.search`, the user will obtain a list of the non-reduntant sequences. If the user provides the results from `regex.search`, the function will return the motif summary table.
+
+We will use the `effector.summary` function with our `hmm.search` results (the `candidate.rxlr` object):
+
+```{r}
+summary.list <- effector.summary(candidate.rxlr)
+```
+
+### Motif table
+
+```{r}
+knitr::kable(summary.list$motif.table)
+```
+
+The motif table has a column called **MOTIF**.
+This column summarizes the candidate ORF into one of 4 categories:
+
+- Complete: The candidate ORF has both motifs of interest (RxLR + EER or LFLAK + HVLV)
+- Only RxLR/Only LFLAK: The candidate ORF only has the translocation domain
+- Only EER/HVLV: The candidate ORF only has the second motif of interest
+- No motifs: The sequence has a hit with the HMM profile but does not have any motif of interest
+
+### Non-redundant sequences
+
+```{r}
+head(summary.list$motif.table, n = 2)
+length(summary.list$consensus.sequences)
+```
+
+The `summary.list$consensus.sequences` has all 27 RxLR candidate genes found in our searches.
+
+## Exporting the non-redundant effector candidates
+
+To export the non-redundant effector candidates that resulted from the `hmm.search` or `regex.search` functions, we use the `write.fasta` function of the `seqinr` package. 
+We recomend the users to read the documentation of the [`seqinr`](https://cran.r-project.org/web/packages/seqinr/seqinr.pdf) package
+Since the objects that result from the `hmm.search` or `regex.search` function are of the `SeqFastadna` class, we can use any of the function of the `seqinr` package that use this class as well. 
+
+To save the results from our example file, we would use the following command:
+
+```{r}
+write.fasta(sequences = getSequence(summary.list$consensus.sequences), names = getName(summary.list$consensus.sequences), file.out = "RxLR_candidates.fasta")
+```
+
+## Visualizing the HMM profile using a sequence logo-like plot
+
+To determine if the HMM profile includes the motifs of interest, we have created the function `hmm.logo`.
+The function `hmm.logo` reads the HMM profile (obtained from the `hmm.search` step) and uses `ggplot2` to create a bar-plot.
+The bar-plot will illustrate the bits (aminoacid score) of each amino acid used to construct the HMM profile according to its consensus position in the HMM profile. 
+To learn more about sequence logo plots visit this [wikipedia article](https://en.wikipedia.org/wiki/Sequence_logo).
+
+The `hmm.logo` is a wrapper that parses the HMM profile table and plots the parsed table results in `ggplot2`.
+
+To visualize the sequence logo-like plot in our example data set, we use our `candidate.rxlr$HMM_Table` object in the `hmm.search` function:
+
+```{r}
+hmm.logo(hmm.table = candidate.rxlr$HMM_Table)
+```
