@@ -6,22 +6,20 @@ The `effectR` package is an R package designed to call oomycete RxLR and CRN eff
 # Overview
 
 The `effectR` packages searches for the motifs of interest (RxLR-EER motif for RxLR effectors and LFLAK motif for CRN effectors) using a regular expression search (`REGEX`). 
-These motifs used by the REGEX `effectR` search have been reported in the literature (Haas et al., 2009, Stam et al., 2004).
+These motifs used by the REGEX `effectR` search have been reported in the literature ([Haas et al., 2009](https://www.nature.com/nature/journal/v461/n7262/full/nature08358.html), [Stam et al., 2013](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0059517)).
 
 The `effectR` package aligns the REGEX search results using [`MAFFT`](http://mafft.cbrc.jp/alignment/software/), and builds a HMM profile based on the multiple sequence alignment result using the `hmmbuild` program from [`HMMER`](http://hmmer.org/). The HMM profile is used to search across ORF of the genome of interest using the `hmmsearch` binary from `HMMER`. 
 The search step will retain sequences with significant hits to the profile of interest. 
 `effectR` also combines the redundant sequences found in both REGEX and HMM searches into a single dataset that can be easily exported. 
 In addition, `effectR` reads and returns the HMM profile to the user and allows for the creation of a [MOTIF logo-like plot](https://en.wikipedia.org/wiki/Sequence_logo) using `ggplot2`.
 
-## Requirements
-
 - R packages:
- - [`seqinr`]()
- - [`ggplot2`]()
+ - [`seqinr`](https://cran.r-project.org/web/packages/seqinr/seqinr.pdf)
+ - [`ggplot2`](http://ggplot2.org/)
  
 - External software 
-  - [`MAFFT`]()
-  - [`HMMER`]()
+  - [`MAFFT`](mafft.cbrc.jp/alignment/software/)
+  - [`HMMER`](http://hmmer.org/)
   
 ## Data input
 
