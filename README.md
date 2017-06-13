@@ -13,6 +13,8 @@ The search step will retain sequences with significant hits to the profile of in
 `effectR` also combines the redundant sequences found in both REGEX and HMM searches into a single dataset that can be easily exported. 
 In addition, `effectR` reads and returns the HMM profile to the user and allows for the creation of a [MOTIF logo-like plot](https://en.wikipedia.org/wiki/Sequence_logo) using `ggplot2`.
 
+## Requirements 
+
 - R packages:
  - [`seqinr`](https://cran.r-project.org/web/packages/seqinr/seqinr.pdf)
  - [`ggplot2`](http://ggplot2.org/)
