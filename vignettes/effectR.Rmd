@@ -24,12 +24,12 @@ In addition, `effectR` reads and returns the HMM profile to the user and allows 
 ## Requirements
 
 - R packages:
- - [`seqinr`]()
- - [`ggplot2`]()
+ - [`seqinr`](https://cran.r-project.org/web/packages/seqinr/seqinr.pdf)
+ - [`ggplot2`](http://ggplot2.org/)
  
 - External software 
-  - [`MAFFT`]()
-  - [`HMMER`]()
+  - [`MAFFT`](mafft.cbrc.jp/alignment/software/)
+  - [`HMMER`](http://hmmer.org/)
   
 ## Data input
 
@@ -172,6 +172,6 @@ The `hmm.logo` is a wrapper that parses the HMM profile table and plots the pars
 
 To visualize the sequence logo-like plot in our example data set, we use our `candidate.rxlr$HMM_Table` object in the `hmm.search` function:
 
-```{r}
+```{r, fig.width=12, fig.height=7}
 hmm.logo(hmm.table = candidate.rxlr$HMM_Table)
 ```
