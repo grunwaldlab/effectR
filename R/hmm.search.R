@@ -42,13 +42,19 @@ hmm.search <-  function(original.seq = "file.fasta", regex.seq = sequences, maff
   setwd(tmp.dir)
 
   # MAFFT alignment
-  cat("Starting MAFFT alignment.\nPlease be patient\n")
+  cat("Starting MAFFT alignment.\n")
   cat("---\n")
+  cat(paste0("Detecting if MAFFT is installed in the specified mafft.path: "), mafft.path,"\n")
+  Sys.sleep(1)
+  if (file.exists(paste0(mafft.path, "/mafft"))){
+    cat("Executing MAFFT\nPlease be patient\n")
     seqinr::write.fasta(sequences = seqinr::getSequence(sequences), names=seqinr::getName(sequences), file.out = file.name)
-  mafft.command <- paste0(mafft.path,"mafft --legacygappenalty --genafpair --maxiterate 1000 --thread ", num.threads ," --quiet ",file.name," > ",mafft.out.name)
-  system(mafft.command)
-  cat("MAFFT alignment finished!")
-  cat("\n")
+    mafft.command <- paste0(mafft.path,"mafft --legacygappenalty --genafpair --maxiterate 1000 --thread ", num.threads ," --quiet ",file.name," > ",mafft.out.name)
+    system(mafft.command)
+    cat("MAFFT alignment finished!")
+    cat("\n")}
+  else {
+    stop("MAFFT not found in the specified path.\n Please check your MAFFT path (go to sh and ask `which mafft`) or MAFTT installation")}
   # HMM
   cat("Starting HMM\n")
     cat("---\n")
@@ -58,16 +64,25 @@ hmm.search <-  function(original.seq = "file.fasta", regex.seq = sequences, maff
     }
 
   ## HMM build
+
+  if (file.exists(paste0(hmm.path, "/hmmbuild")) == F ){
+   stop(paste0("hmmbuild not found in ",hmm.path,"\nCheck your HMMER installation path\n"))
+  } else if (file.exists(paste0(hmm.path, "/hmmpress")) == F ){
+   stop(paste0("hmmpress not found in ",hmm.path,"\nCheck your HMMER installation path\n"))
+  }  else if (file.exists(paste0(hmm.path, "/hmmsearch")) == F ){
+    stop(paste0("hmmsearch not found in ",hmm.path,"\nCheck your HMMER installation path\n"))
+  }
+
   unlink(paste0(tmp.dir,"/",hmmbuild.out))
   hmmbuild <- paste0(hmm.path, "/hmmbuild --amino ",hmmbuild.out," ",mafft.out.name)
   system(hmmbuild, ignore.stdout = T, ignore.stderr = F)
-  system(paste0(hmm.path,"hmmpress ", hmmbuild.out), ignore.stdout = T, ignore.stderr = F)
+  system(paste0(hmm.path,"hmmpress ", hmmbuild.out), ignore.stdout = F, ignore.stderr = F)
   system(paste0("perl -pi -e 's/ {2,}/\t/g' ",hmmbuild.out))
   cat("HMM profile created.\n")
 
   ## HMM search
   cat("\nStarting HMM searches\n")
-  system(paste0(hmm.path, "hmmsearch -T 0 --tblout ", hmmsearch.out," ",hmmbuild.out," ",original.seq), ignore.stdout = T, ignore.stderr = F)
+  system(paste0(hmm.path, "hmmsearch -T 0 --tblout ", hmmsearch.out," ",hmmbuild.out," ",original.seq), ignore.stdout = F, ignore.stderr = F)
   system(paste0("perl -pi -e 's/ {2,}/\t/g' ",hmmsearch.out))
   cat("\n")
   cat("hmmsearch finished!\n")
