@@ -19,11 +19,11 @@ addons:
       - gcc-4.9
       - g++-4.9
 
-before_install: |
-  mkdir ~/.R
-  cat <<EOF > ~/.R/Makevars
-  CXX1X=g++-4.9
-  CXX1XSTD=-std=c++11
+install:
+    - wget http://mafft.cbrc.jp/alignment/software/mafft-7.310-with-extensions-src.tgz
+    - tar -xzvf mafft-7.310-with-extensions-src.tgz
+    - pushd mafft-7.310-with-extensions-src && ./configure --prefix=/usr && make && sudo make install
+
 
 r_github_packages:
 #  - jimhester/covr
