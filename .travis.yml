@@ -7,7 +7,7 @@ r:
 
 cache: packages
 warnings_are_errors: true
-sudo: false 
+sudo: required 
 
 # https://github.com/jimhester/rio/blob/9026180fd731aaed34f21cba3b5e207124618e5b/.travis.yml#L8-L20
 
