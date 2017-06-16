@@ -22,7 +22,7 @@ addons:
 install:
     - wget http://mafft.cbrc.jp/alignment/software/mafft-7.310-with-extensions-src.tgz
     - tar -xzvf mafft-7.310-with-extensions-src.tgz
-    - pushd mafft-7.310-with-extensions-src && ./configure --prefix=/usr && make && sudo make install
+    - pushd mafft-7.310-with-extensions && ./configure --prefix=/usr && make && sudo make install && mafft -h
 
 
 r_github_packages:
