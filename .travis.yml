@@ -7,7 +7,7 @@ r:
 
 cache: packages
 warnings_are_errors: true
-sudo: required 
+sudo: required
 
 # https://github.com/jimhester/rio/blob/9026180fd731aaed34f21cba3b5e207124618e5b/.travis.yml#L8-L20
 
@@ -28,10 +28,10 @@ before_install:
     - pushd hmmer-3.1b2-linux-intel-x86_64 && ./configure && make && sudo make install
 
 r_packages:
-  - covr
+# - covr
 
 after_success:
-  - Rscript -e 'library(covr);coveralls()'
+#  - Rscript -e 'library(covr);coveralls()'
 
 notifications:
   email:
