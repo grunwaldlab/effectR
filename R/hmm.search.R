@@ -10,10 +10,13 @@
 #' @export
 #' @return A list of three elements: REGEX candidate effectors, HMM candidate effectors, and HMM results table.
 #' @examples
+#'
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif="RxLR")
+#' \dontrun{
 #' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
+#' }
 #' @details
 #' \code{hmm.search} uses the results from \code{\link{regex.search}} to search for motifs of interest using hidden markov models after aligning the sequences with MAFFT.
 #' After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.

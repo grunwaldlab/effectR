@@ -8,8 +8,10 @@
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif='RxLR')
+#' \dontrun{
 #' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/")
 #' hmm.logo(candidate.rxlr$HMM_Table)
+#' }
 
 hmm.logo <- function (hmm.table=candidate.regex[[3]]) {
   # Plot
