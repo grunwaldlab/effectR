@@ -114,7 +114,7 @@ In addition, the `hmm.function` requires the path of the original FASTA file con
 We will continue or example by performing a `hmm.search` in our example data set. We will include the original example FASTA file location (stored in the `fasta.file` object), the location of the `MAFFT` binary and the location of the HMMER binaries:
 
 ```{r, eval=F}
-candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = ORF, mafft.path = "/usr/local/bin/", hmm.path = "/usr/local/bin/")
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX, mafft.path = "/usr/local/bin/", hmm.path = "/usr/local/bin/")
 ```
 
 The `hmm.search` function has resulted in 27 effector candidates. 
