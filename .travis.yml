@@ -33,6 +33,12 @@ r_packages:
 after_success:
 #  - Rscript -e 'library(covr);coveralls()'
 
+install:
+  - Rscript -e 'install.packages("devtools");
+  - Rscript -e 'devtools::install_deps("effectR")'
+script:
+  - Rscript -e 'devtools::check("effectR")'
+
 notifications:
   email:
     on_success: change
