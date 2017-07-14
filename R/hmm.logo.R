@@ -11,6 +11,7 @@
 #' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
 #'                   mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
 #' hmm.logo(candidate.rxlr$HMM_Table)
+#' }
 
 hmm.logo <- function (hmm.table=hmm.table) {
   # Plot

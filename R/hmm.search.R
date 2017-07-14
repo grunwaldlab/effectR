@@ -10,6 +10,7 @@
 #' @export
 #' @return A list of three elements: REGEX candidate effectors, HMM candidate effectors, and HMM results table.
 #' @examples
+#'
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif="RxLR")
