@@ -10,10 +10,11 @@
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif='RxLR')
-#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/")
+#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
+#'                   mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
 #' effector.summary(candidate.rxlr)
 #'
-effector.summary <- function (hmm.result=candidate.rxlr, motif="RxLR"){
+effector.summary <- function (hmm.result=hmm.result, motif="RxLR"){
   motif.out <- list()
   if (length(hmm.result) == 3) {
     summ.dataf <- c(hmm.result[[1]],hmm.result[[2]])

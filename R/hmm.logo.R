@@ -8,10 +8,11 @@
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif='RxLR')
-#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/")
+#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
+#'                   mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
 #' hmm.logo(candidate.rxlr$HMM_Table)
 
-hmm.logo <- function (hmm.table=candidate.regex[[3]]) {
+hmm.logo <- function (hmm.table=hmm.table) {
   # Plot
   hmm <- hmm.table
   colnames(hmm) <- hmm[1,]
@@ -30,6 +31,6 @@ hmm.logo <- function (hmm.table=candidate.regex[[3]]) {
   hmm.m <- reshape2::melt(t(hmm.sums))
   colnames(hmm.m) <- c("element","position","bits")
   hmm.m$bits <- as.numeric(as.character(hmm.m$bits))
-  p <- ggplot2::ggplot(hmm.m, ggplot2::aes(x=position, y=bits, fill=element)) + ggplot2::geom_bar(stat = "identity",position = "stack",width=1, alpha=0.5) + ggplot2::geom_text(ggplot2::aes(label=element, size=bits), position='stack') +  viridis::scale_fill_viridis(discrete=TRUE) + ggplot2::theme_bw() + ggplot2::ylab("Relative Frequency (bits)") + ggplot2::guides(fill=FALSE)
+  p <- ggplot2::ggplot(hmm.m, ggplot2::aes_string(x="position", y="bits", fill="element")) + ggplot2::geom_bar(stat = "identity",position = "stack",width=1, alpha=0.5) + ggplot2::geom_text(ggplot2::aes_string(label="element", size="bits"), position='stack') +  viridis::scale_fill_viridis(discrete=TRUE) + ggplot2::theme_bw() + ggplot2::ylab("Relative Frequency (bits)") + ggplot2::guides(fill=FALSE)
   return(p)
 }

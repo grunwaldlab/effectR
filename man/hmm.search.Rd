@@ -36,7 +36,8 @@ The user has to specify the path for the MAFFT and the HMMER executable binaries
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(ORF, motif="RxLR")
-candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
+                  mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
 }
 \keyword{effector}
 \keyword{regex}

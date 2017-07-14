@@ -13,7 +13,8 @@
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif="RxLR")
-#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
+#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
+#'                   mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
 #' @details
 #' \code{hmm.search} uses the results from \code{\link{regex.search}} to search for motifs of interest using hidden markov models after aligning the sequences with MAFFT.
 #' After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.
@@ -88,8 +89,8 @@ hmm.search <-  function(original.seq = "file.fasta", regex.seq = sequences, maff
   cat("hmmsearch finished!\n")
 
   ## Reading in hmm results
-  hmm.hits <- read.delim(hmmsearch.out,comment.char = "#", header = F, sep = "\t", stringsAsFactors = F)[,1]
-  hmm.table <- read.table(hmmbuild.out, blank.lines.skip = T, skip = 16, sep = "", fill = T, stringsAsFactors = F)
+  hmm.hits <- utils::read.delim(hmmsearch.out,comment.char = "#", header = F, sep = "\t", stringsAsFactors = F)[,1]
+  hmm.table <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 16, sep = "", fill = T, stringsAsFactors = F)
   total.seq <- seqinr::read.fasta(original.seq)
   hmm.seq <- total.seq[seqinr::getName(total.seq) %in% hmm.hits]
   total.seq <- list(regex.seq, hmm.seq, hmm.table)

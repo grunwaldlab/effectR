@@ -4,7 +4,7 @@
 \alias{effector.summary}
 \title{Returns non-redundant sequences from hmm.search or regex.search and generates a motif table}
 \usage{
-effector.summary(hmm.result = candidate.rxlr, motif = "RxLR")
+effector.summary(hmm.result = hmm.result, motif = "RxLR")
 }
 \arguments{
 \item{hmm.result}{A list of \code{SeqFastadna} objects obtained from \code{\link{regex.search}} or \code{\link{hmm.search}}}
@@ -21,7 +21,8 @@ This function summarize the results from \code{\link{regex.search}} or \code{\li
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(ORF, motif='RxLR')
-candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/")
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
+                  mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
 effector.summary(candidate.rxlr)
 
 }
