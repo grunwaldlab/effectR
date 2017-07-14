@@ -12,6 +12,15 @@ hmm.logo(hmm.table = hmm.table)
 \description{
 This function plots the results from \code{\link{hmm.search}} as a barplot with aminoacids in the x axis and the relative frequency of each aminoacid in the y axis
 }
+\examples{
+fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
+ORF <- seqinr::read.fasta(fasta.file)
+REGEX <- regex.search(ORF, motif='RxLR')
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
+                  mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
+hmm.logo(candidate.rxlr$HMM_Table)
+
+}
 \keyword{effector}
 \keyword{plot}
 \keyword{regex}
