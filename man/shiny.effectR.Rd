@@ -4,7 +4,12 @@
 \alias{shiny.effectR}
 \title{Function to run the effectR package using a shiny app}
 \usage{
-shiny.effectR()
+shiny.effectR(mafft.path="/usr/local/bin", hmm.path="/usr/local/bin")
+}
+\arguments{
+\item{mafft.path}{Local path of the MAFFT binary executable file}
+
+\item{hmm.path}{Local path of the HMMER binaries}
 }
 \description{
 This function will launch an interactive web interface to run the effectR package functions to obtain effectors. It runs using the \pkg{shiny} R package.

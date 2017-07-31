@@ -5,13 +5,14 @@
 #' @keywords regex effector plot
 #' @export
 #' @examples
+#' \dontrun{
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif='RxLR')
 #' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
 #'                   mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
 #' hmm.logo(candidate.rxlr$HMM_Table)
-#'
+#'}
 
 hmm.logo <- function (hmm.table=hmm.table) {
   # Plot
