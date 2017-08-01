@@ -26,7 +26,7 @@ shinyUI(fluidPage(
               }
                  "))
       ),
-  
+
   titlePanel("The de novo Effector Pipeline online server: RxLR Module"),
     mainPanel(
       tags$hr(),
@@ -60,24 +60,27 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
       useShinyjs(),
       extendShinyjs(text = jscode),
       actionButton("refresh", "Restart app", style="color: #fff; background-color: #b72103; border-color: #a31f04"),
-      
-      
+
+
       tags$hr(),
-      h2("Step 1"), 
+      h2("Step 1"),
       h3("Regular expression search"),
       p("Step 1 uses a regular expression search to identify the sequences with the motifs of interest (RxLR+EER as based on Haas at al., 2009)."),
+      p(),
+      selectInput("motif_sel", label = h3("Select motif to search"),
+                  choices = list("RxLR" = "RxLR", "CRN" = "CRN"), selected = "RxLR"),
       p(),
       actionButton('regex_seach', "Do REGEX search", icon("paper-plane"), style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
       p(),
       textOutput('regex_wait'),
-      verbatimTextOutput('regex'),      
+      verbatimTextOutput('regex'),
       singleton(tags$head(HTML(
         '
         <script type="text/javascript">
         $(document).ready(function() {
         // disable download at startup. downloadHMM is the id of the downloadButton
         $("#downloadREGEX").attr("disabled", "true").attr("onclick", "return false;");
-        
+
         Shiny.addCustomMessageHandler("regex_ready", function(message) {
         $("#downloadREGEX").removeAttr("disabled").removeAttr("onclick").html(
         "<i class=\\"fa fa-download\\"></i>Download (file size: " + message.fileSize + ")");
@@ -87,7 +90,7 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
         '))),
       downloadButton('downloadREGEX', 'Download REGEX candidates'),
       helpText("Download will be available once the processing is completed."),
-      
+
       #ADD A DOWNLOADHANDLER TO OBTAIN THE REGEX SEQUENCES
 
       tags$hr(),
@@ -106,7 +109,7 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
         $(document).ready(function() {
         // disable download at startup. downloadHMM is the id of the downloadButton
         $("#downloadHMM").attr("disabled", "true").attr("onclick", "return false;");
-        
+
         Shiny.addCustomMessageHandler("download_ready", function(message) {
         $("#downloadHMM").removeAttr("disabled").removeAttr("onclick").html(
         "<i class=\\"fa fa-download\\"></i>Download (file size: " + message.fileSize + ")");
@@ -116,7 +119,7 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
         '))),
       downloadButton('downloadHMM', 'Download HMM files'),
       helpText("Download will be available once the processing is completed."),
-      
+
       h3("HMM Logo"),
       p("Create a bar plot resembling a \"sequence logo\" of the sequence alignment used to build the HMM model in Step 2."),
       actionButton("logo", "Create LOGO",icon("paper-plane"), style="color: #fff; background-color: #61c66d; border-color: #21a831"),
@@ -128,7 +131,7 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
         $(document).ready(function() {
         // disable download at startup. downloadHMM is the id of the downloadButton
         $("#logo_img").attr("disabled", "true").attr("onclick", "return false;");
-        
+
         Shiny.addCustomMessageHandler("logo_ready", function(message) {
         $("#logo_img").removeAttr("disabled").removeAttr("onclick").html(
         "<i class=\\"fa fa-download\\"></i>Download (file size: " + message.fileSize + ")");
@@ -137,7 +140,7 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
         </script>
         '))),
       #downloadButton('logo_img', 'Download HMM alignment LOGO'),
-      
+
       tags$hr(),
       h2("Step 3"),
       h2("Tables and statistics"),
@@ -159,7 +162,7 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
         $(document).ready(function() {
         // disable download at startup. downloadHMM is the id of the downloadButton
         $("#motifDownload").attr("disabled", "true").attr("onclick", "return false;");
-        
+
         Shiny.addCustomMessageHandler("motif_ready", function(message) {
         $("#motifDownload").removeAttr("disabled").removeAttr("onclick").html(
         "<i class=\\"fa fa-download\\"></i>Download (file size: " + message.fileSize + ")");
@@ -182,9 +185,9 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
         <div class="alert_warning">
         <b>DISCLAIMER:</b>
         <p></p>
-       We recommend a final <b>manual curation</b> and <b>verification</b> of the effectors obtained. Other non-canonical RxLR effectors might not be called due to the REGEX + HMM based searches. 
+       We recommend a final <b>manual curation</b> and <b>verification</b> of the effectors obtained. Other non-canonical RxLR effectors might not be called due to the REGEX + HMM based searches.
         <p></p>
-        In addition, we recommend the use of <b><a href="http://www.cbs.dtu.dk/services/SignalP-2.0/">SignalP 2.0</a></b> in the resulting output to determine if the called effectors have <b>signal peptide evidence</b>        
+        In addition, we recommend the use of <b><a href="http://www.cbs.dtu.dk/services/SignalP-2.0/">SignalP 2.0</a></b> in the resulting output to determine if the called effectors have <b>signal peptide evidence</b>
     </div>
         '
       ))),

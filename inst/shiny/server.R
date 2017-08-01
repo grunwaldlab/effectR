@@ -26,7 +26,6 @@ original.dir <- getwd()
 tmp.dir <- tempdir()
 setwd(tmp.dir)
 
-# MAFFT and HMM paths
 
 ##### SHINY APP START #######
 
@@ -70,7 +69,11 @@ shinyServer(function(input, output, session) {
     withProgress(message = "Searching for sequences that match the REGEX of interest", value=0, {
       regex <- list()
       for (i in 1:length(seq)){
-        regex[[i]] <- unlist(gregexpr(seq[[i]], pattern="^\\w{12,60}r\\wlr\\w{6,10}eer", perl = T,ignore.case = T))
+        if (input$motif_sel == "RxLR"){
+          regex[[i]] <- unlist(gregexpr(seq[[i]], pattern="^\\w{12,60}r\\wlr\\w{6,10}eer", perl = T,ignore.case = T))
+        } else if (input$motif_sel == "CRN"){
+          regex[[i]] <- unlist(gregexpr(seq[[i]], pattern="^\\w{1,90}LFLAK\\w+", perl = T,ignore.case = T))
+        }
         percentage <- percentage + 1/length(seq)*100
         incProgress(1/length(seq), detail = paste0("Progress: ",round(percentage,2),"%"))
       }
@@ -254,30 +257,33 @@ shinyServer(function(input, output, session) {
   motif_table <- reactive({
     sequences <- lapply(final_fasta(), function (x) paste(unlist(x),collapse = ""))
     # REGEX search of the motifs of interest:
-    # Number of RxLR motifs
-    rxlr.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) length(x)))
-    # RxLR positions
-    rxlr.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
-    # Number of EER motifs
-    eer.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ED][ED][KR]", perl = T,ignore.case = T))), function (x) length(x)))
-    # EER positions
-    eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ED][ED][KR]", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
-    # Concatenate the results in a motif table
-    motifs <- data.frame(getName(final_fasta()),rxlr.num,rxlr.motif,eer.num,eer.motif)
-    # Replacing the -1 to NA (-1 represent that gregexp didn't find a hit)
+    if (input$motif_sel == "RxLR"){
+      rxlr.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) length(x)))
+      rxlr.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+      eer.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ED][ED][KR]", perl = T,ignore.case = T))), function (x) length(x)))
+      eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ED][ED][KR]", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+      motifs <- data.frame(seqinr::getName(final_fasta()),rxlr.num,rxlr.motif,eer.num,eer.motif, stringsAsFactors = F)
+    } else if (input$motif_sel == "CRN") {
+      lflak.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="lflak", perl = T,ignore.case = T))), function (x) length(x)))
+      lflak.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="lflak", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+      hvlv.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="hvlv", perl = T,ignore.case = T))), function (x) length(x)))
+      hvlv.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="hvlv", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+      motifs <- data.frame(seqinr::getName(final_fasta()),lflak.num,lflak.motif,hvlv.num,hvlv.motif, stringsAsFactors = F)
+    }
     motifs[motifs == -1] <- NA
-    # Since gregexp gives us a number, if this number is -1 then the length count is wrong. Lets correct it: if there is an NA, then the number of motifs in that particular motif should be 0
-    motifs$rxlr.num[is.na(motifs$rxlr.motif)] <- 0
-    motifs$eer.num[is.na(motifs$eer.motif)] <- 0
-    # Reordering the table
-    motifs <- motifs[order(motifs$rxlr.num,motifs$eer.num,decreasing = T),]
-    # Creating MOTIF summary
+    motifs <- data.frame(apply(motifs, 2, as.character), stringsAsFactors = F)
+    motifs[,2][is.na(motifs[,3])] <- 0
+    motifs[,4][is.na(motifs[,5])] <- 0
+    motifs <- motifs[order(motifs[,2],motifs[,4],decreasing = T),]
     motifs$summary <- "No MOTIFS"
-    motifs$summary[motifs$rxlr.num > 0 & motifs$eer.num > 0] <- "Complete"
-    motifs$summary[motifs$rxlr.num != 0 & motifs$eer.num == 0] <- "Only RxLR motif"
-    motifs$summary[motifs$rxlr.num == 0 & motifs$eer.num != 0] <-"Only EER motif"
-    #Column names
-    colnames(motifs) <- c("Sequence ID","RxLR number","RxLR position","EER number","EER position","MOTIF")
+    motifs$summary[motifs[,2] > 0 & motifs[,4] > 0] <- "Complete"
+    motifs$summary[motifs[,2] != 0 & motifs[,4] == 0] <- if (input$motif_sel == "RxLR"){c("Only RxLR motif")} else if (input$motif_sel == "CRN"){("Only LFLAK motif")}
+    motifs$summary[motifs[,2] == 0 & motifs[,4] != 0] <- if (input$motif_sel == "RxLR"){c("Only EER motif")} else if (input$motif_sel == "CRN"){("Only HVLV motif")}
+    if (input$motif_sel == "RxLR"){
+      colnames(motifs) <- c("Sequence ID","RxLR number","RxLR position","EER number","EER position","MOTIF")
+    } else if (input$motif_sel == "CRN") {
+      colnames(motifs) <- c("Sequence ID","LFLAK number","LFLAK position","HVLV number","HVLV position","MOTIF")
+    }
     motifs
   })
 
@@ -312,7 +318,7 @@ shinyServer(function(input, output, session) {
   output$downloadData <- downloadHandler(
     # This function returns a string which tells the client
     # browser what name to use when saving the file.
-    filename = paste("RxLR_raw","fasta",sep = "."),
+    filename = paste("Candidate_effectors","fasta",sep = "."),
     # This function should write data to a file given to it by
     # the argument 'file'.
     content = function(file) {
