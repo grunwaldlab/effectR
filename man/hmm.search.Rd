@@ -5,19 +5,18 @@
 \title{Searching for motifs using HMM searches}
 \usage{
 hmm.search(original.seq = "file.fasta", regex.seq = sequences,
-  mafft.path = "/usr/local/bin/", num.threads = 2,
-  hmm.path = "/usr/local/bin/")
+  mafft.path = NULL, num.threads = 2, hmm.path = NULL)
 }
 \arguments{
 \item{original.seq}{The path for the original six-frame transaltion FASTA file}
 
 \item{regex.seq}{A list of \code{SeqFastadna} objects resulting from \code{\link{regex.search}}. The HMM profile will be constructed using these sequences}
 
-\item{mafft.path}{Local path of the MAFFT binary executable file}
+\item{mafft.path}{Local path of folder containing the MAFFT binary executable file. If not specified, then MAFFT must be in the progarm search path.}
 
 \item{num.threads}{Number of threads to be used by MAFFT}
 
-\item{hmm.path}{Local path of the HMMER binaries}
+\item{hmm.path}{Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the progarm search path.}
 }
 \value{
 A list of three elements: REGEX candidate effectors, HMM candidate effectors, and HMM results table.
@@ -38,8 +37,7 @@ The user has to specify the path for the MAFFT and the HMMER executable binaries
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(ORF, motif="RxLR")
-candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
-                  mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX)
 }
 }
 \keyword{effector}
