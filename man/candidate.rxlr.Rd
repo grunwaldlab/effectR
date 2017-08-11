@@ -3,9 +3,11 @@
 \docType{data}
 \name{candidate.rxlr}
 \alias{candidate.rxlr}
-\title{Data files included in the package: candidate.rxlr is the result if the effector.summary function for new users that have not installed the additional software used by the effectR package}
+\title{An example of `effector.summary` output}
 \description{
-Data files included in the package: candidate.rxlr is the result if the effector.summary function for new users that have not installed the additional software used by the effectR package
+`candidate.rxlr` is the result if the \code{\link{effector.summary}} function
+for new users that have not installed the additional software used by the
+effectR package.
 }
 \author{
 Javier F. Tabima \email{tabimaj@science.oregonstate.edu}
