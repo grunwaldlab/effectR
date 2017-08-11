@@ -11,10 +11,10 @@
 #'
 
 shiny.effectR <- function(mafft.path="/usr/local/bin", hmm.path="/usr/local/bin"){
-  if (file.exists(paste0(mafft.path, "/mafft")) == F ){
+  if (file.exists(file.path(mafft.path, "mafft")) == F ){
     stop(paste0("mafft not found in ",mafft.path,"\nCheck your MAFFT installation path\n"))
   }
-  if (file.exists(paste0(hmm.path, "/hmmbuild")) == F ){
+  if (file.exists(file.path(hmm.path, "hmmbuild")) == F ){
     stop(paste0("hmmbuild not found in ",mafft.path,"\nCheck your HMMER installation path\n"))
   }
   assign("mafft.path.shiny",mafft.path, envir = globalenv())
