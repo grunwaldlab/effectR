@@ -21,8 +21,8 @@
 #' \code{hmm.search} uses the results from \code{\link{regex.search}} to search for motifs of interest using hidden markov models after aligning the sequences with MAFFT.
 #' After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.
 #' @note
-#' The user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
-hmm.search <-  function(original.seq = "file.fasta", regex.seq = sequences, mafft.path = NULL, num.threads = 2, hmm.path = NULL){
+#' If MAFFT/HMMER are not the program search path, the user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
+hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads = 2, hmm.path = NULL){
   sequences <- regex.seq
   if (unique(unlist(lapply(sequences, class))) != "SeqFastadna") {
     stop("The object is not a list of sequences read by seqinr.")
@@ -56,7 +56,7 @@ hmm.search <-  function(original.seq = "file.fasta", regex.seq = sequences, maff
 
   # HMM
   cat("Starting HMM\n")
-    cat("---\n")
+  cat("---\n")
   cat("Creating HMM profile\n\n")
     if(file.exists(mafft.out.name) == F){
       stop("No MAFFT alignment found")

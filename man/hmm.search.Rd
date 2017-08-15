@@ -4,8 +4,8 @@
 \alias{hmm.search}
 \title{Searching for motifs using HMM searches}
 \usage{
-hmm.search(original.seq = "file.fasta", regex.seq = sequences,
-  mafft.path = NULL, num.threads = 2, hmm.path = NULL)
+hmm.search(original.seq, regex.seq, mafft.path = NULL, num.threads = 2,
+  hmm.path = NULL)
 }
 \arguments{
 \item{original.seq}{The path for the original six-frame transaltion FASTA file}
@@ -29,7 +29,7 @@ This function uses MAFFT and HMMER to search for sequences with RxLR or CRN moti
 After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.
 }
 \note{
-The user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
+If MAFFT/HMMER are not the program search path, the user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
 }
 \examples{
 
