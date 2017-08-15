@@ -4,16 +4,12 @@
 #'
 #' @details To sucessfully run this function the user will need to set the
 #' @import shiny
-#' @param mafft.path Local path of the MAFFT binary executable file
-#' @param hmm.path Local path of the HMMER binaries
+#' @param mafft.path Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the progarm search path.
+#' @param hmm.path Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the progarm search path.
 #' @export
-shiny.effectR <- function(mafft.path="/usr/local/bin", hmm.path="/usr/local/bin"){
-  if (file.exists(file.path(mafft.path, "mafft")) == F ){
-    stop(paste0("mafft not found in ",mafft.path,"\nCheck your MAFFT installation path\n"))
-  }
-  if (file.exists(file.path(hmm.path, "hmmbuild")) == F ){
-    stop(paste0("hmmbuild not found in ",mafft.path,"\nCheck your HMMER installation path\n"))
-  }
+shiny.effectR <- function(mafft.path = NULL, hmm.path = NULL){
+  mafft.path <- dirname(get_mafft_path(mafft.path))
+  hmm.path <- dirname(get_hmmer_path("hmmsearch", hmm.path))
   assign("mafft.path.shiny",mafft.path, envir = globalenv())
   assign("hmm.path.shiny",hmm.path, envir = globalenv())
   shiny::runApp(system.file("shiny",".",package = "effectR"))

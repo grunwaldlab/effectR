@@ -14,7 +14,7 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
                            verbose = FALSE) {
   # Set defualt path
   if (is.null(mafft.path)) {
-    path <- "mafft"
+    path <- unname(Sys.which("mafft"))
   } else if (endsWith(mafft.path, "mafft")) {
     path <- mafft.path
   } else {
@@ -55,7 +55,7 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
                            verbose = FALSE) {
   # Set defualt path
   if (is.null(hmmer.path)) {
-    path <- command
+    path <- unname(Sys.which(command))
   } else {
     path <- file.path(hmmer.path, command)
   }
