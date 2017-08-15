@@ -2,14 +2,11 @@
 #'
 #' @description This function will launch an interactive web interface to run the effectR package functions to obtain effectors. It runs using the \pkg{shiny} R package.
 #'
-#' @usage shiny.effectR(mafft.path="/usr/local/bin", hmm.path="/usr/local/bin")
 #' @details To sucessfully run this function the user will need to set the
 #' @import shiny
 #' @param mafft.path Local path of the MAFFT binary executable file
 #' @param hmm.path Local path of the HMMER binaries
 #' @export
-#'
-
 shiny.effectR <- function(mafft.path="/usr/local/bin", hmm.path="/usr/local/bin"){
   if (file.exists(file.path(mafft.path, "mafft")) == F ){
     stop(paste0("mafft not found in ",mafft.path,"\nCheck your MAFFT installation path\n"))

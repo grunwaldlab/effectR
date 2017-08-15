@@ -13,6 +13,7 @@
 #' @examples
 #'
 #'\dontrun{
+#'
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif="RxLR")

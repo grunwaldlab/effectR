@@ -5,7 +5,7 @@
 \alias{candidate.rxlr}
 \title{An example of `effector.summary` output}
 \description{
-`candidate.rxlr` is the result if the \code{\link{effector.summary}} function
+`candidate.rxlr` is an example result of the \code{\link{effector.summary}} function
 for new users that have not installed the additional software used by the
 effectR package.
 }

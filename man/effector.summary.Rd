@@ -23,8 +23,7 @@ This function summarize the results from \code{\link{regex.search}} or \code{\li
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(ORF, motif='RxLR')
-candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
-                  mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, num.threads = 2)
 effector.summary(candidate.rxlr)
 }
 }

@@ -36,6 +36,7 @@ If MAFFT/HMMER are not the program search path, the user has to specify the path
 \examples{
 
 \dontrun{
+
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(ORF, motif="RxLR")

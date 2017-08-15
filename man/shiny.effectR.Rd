@@ -4,7 +4,7 @@
 \alias{shiny.effectR}
 \title{Function to run the effectR package using a shiny app}
 \usage{
-shiny.effectR(mafft.path="/usr/local/bin", hmm.path="/usr/local/bin")
+shiny.effectR(mafft.path = "/usr/local/bin", hmm.path = "/usr/local/bin")
 }
 \arguments{
 \item{mafft.path}{Local path of the MAFFT binary executable file}
