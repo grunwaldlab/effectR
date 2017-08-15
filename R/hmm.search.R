@@ -1,10 +1,10 @@
 #' Searching for motifs using HMM searches
 #'
 #' This function uses MAFFT and HMMER to search for sequences with RxLR or CRN motifs using hidden markov models.
-#' @param original.seq The path for the original six-frame transaltion FASTA file
+#' @param original.seq The path for the original six-frame translation FASTA file
 #' @param regex.seq A list of \code{SeqFastadna} objects resulting from \code{\link{regex.search}}. The HMM profile will be constructed using these sequences
-#' @param mafft.path Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the progarm search path.
-#' @param hmm.path Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the progarm search path.
+#' @param mafft.path Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the program search path.
+#' @param hmm.path Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the program search path.
 #' @param num.threads Number of threads to be used by MAFFT
 #' @param seed The seed to used with HMMER commands. Set this to get the same output each time
 #' @keywords regex effector

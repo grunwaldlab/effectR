@@ -10,7 +10,7 @@ hmm.logo(hmm.table)
 \item{hmm.table}{The HMM profile table resulting from \code{\link{hmm.search}}}
 }
 \description{
-This function plots the results from \code{\link{hmm.search}} as a barplot with aminoacids in the x axis and the relative frequency of each aminoacid in the y axis
+This function plots the results from \code{\link{hmm.search}} as a barplot with amino acids in the x axis and the relative frequency of each amino acid in the y axis
 }
 \examples{
 \dontrun{

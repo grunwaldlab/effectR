@@ -1,6 +1,6 @@
 #' Plots the relative frequencies of each position for \code{hmmsearch} table.
 #'
-#' This function plots the results from \code{\link{hmm.search}} as a barplot with aminoacids in the x axis and the relative frequency of each aminoacid in the y axis
+#' This function plots the results from \code{\link{hmm.search}} as a barplot with amino acids in the x axis and the relative frequency of each amino acid in the y axis
 #' @param hmm.table The HMM profile table resulting from \code{\link{hmm.search}}
 #' @keywords regex effector plot
 #' @export
