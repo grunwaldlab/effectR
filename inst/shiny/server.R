@@ -230,10 +230,10 @@ shinyServer(function(input, output, session) {
   # Table
   summary_table <- reactive (
     if(file.exists("hmmsearch.txt")){
-    hmm <- read.table("hmmsearch.txt", stringsAsFactors = F)
-    num_hmm <- nrow(read.table("hmmsearch.txt", stringsAsFactors = F))
+    hmm <- read.delim("hmmsearch.txt", comment.char = "#", header = F, sep = "", blank.lines.skip = T, stringsAsFactors = F)[,1]
+    num_hmm <- length(hmm)
     num_len <- length(regex.seq())
-    combined.names <- unique(c(hmm$V1, names(regex.seq())))
+    combined.names <- unique(c(hmm, names(regex.seq())))
     num_com <- length(combined.names)
     final.df <- data.frame(num_len,num_hmm,num_com)
     colnames(final.df) <- c("REGEX","HMM","Total")

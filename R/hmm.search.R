@@ -72,35 +72,62 @@ hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads 
 
   ## HMM build
   unlink(file.path(tmp.dir, hmmbuild.out))
-  hmmbuild_command <- c(get_hmmer_path("hmmbuild", hmm.path),
+  if (Sys.info()[['sysname']] %in% "Windows"){
+  fasta_to_stockholm(fasta.file = mafft.out.name)
+  stock.name <- gsub(mafft.out.name, pattern = ".fasta", replacement = ".stockholm"
+    )
+  hmmbuild_command <- c(get_hmmer_path("hmmbuild.exe", hmm.path),
                         "--amino",
                         "--seed", seed,
                         hmmbuild.out,
-                        mafft.out.name)
-  system2(hmmbuild_command, stdout = FALSE)
+                        stock.name)
+  } else {
+    hmmbuild_command <- c(get_hmmer_path("hmmbuild", hmm.path),
+                          "--amino",
+                          "--seed", seed,
+                          hmmbuild.out,
+                          mafft.out.name)
+  }
+  system2(hmmbuild_command, stdout = F)
 
   ## HMM Press
-  hmmpress_command <- c(get_hmmer_path("hmmpress", hmm.path),
+  if (Sys.info()[['sysname']] %in% "Windows"){
+    hmmpress_command <- c(get_hmmer_path("hmmpress.exe", hmm.path),
                         hmmbuild.out)
-  system2(hmmpress_command)
-  system(paste0("perl -pi -e 's/ {2,}/\t/g' ",hmmbuild.out))
+  } else {
+    hmmpress_command <- c(get_hmmer_path("hmmpress", hmm.path),
+                          hmmbuild.out)
+  }
   cat("HMM profile created.\n")
 
   ## HMM search
   cat("\nStarting HMM searches\n")
-  hmmsearch_command <- c(get_hmmer_path("hmmsearch", hmm.path),
+  if (Sys.info()[['sysname']] %in% "Windows"){
+    hmmsearch_command <- c(get_hmmer_path("hmmsearch.exe", hmm.path),
+                           "-T", "0",
+                           "--seed", seed,
+                           "--tblout", hmmsearch.out,
+                           hmmbuild.out,
+                           original.seq)
+    } else {
+    hmmsearch_command <- c(get_hmmer_path("hmmsearch", hmm.path),
                          "-T", "0",
                          "--seed", seed,
                          "--tblout", hmmsearch.out,
                          hmmbuild.out,
                          original.seq)
+  }
   system2(hmmsearch_command)
   cat("\n")
   cat("hmmsearch finished!\n")
 
   ## Reading in hmm results
   hmm.hits <- utils::read.delim(hmmsearch.out, comment.char = "#", header = F, sep = "", blank.lines.skip = T, stringsAsFactors = F)[,1]
+  if (Sys.info()[['sysname']] %in% "Windows"){
+  hmm.table <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 14, sep = "", fill = T, stringsAsFactors = F)
+  } else {
   hmm.table <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 16, sep = "", fill = T, stringsAsFactors = F)
+  }
   total.seq <- seqinr::read.fasta(original.seq)
   hmm.seq <- total.seq[seqinr::getName(total.seq) %in% hmm.hits]
   total.seq <- list(regex.seq, hmm.seq, hmm.table)

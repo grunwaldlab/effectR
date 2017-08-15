@@ -17,7 +17,9 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
     path <- unname(Sys.which("mafft"))
   } else if (endsWith(mafft.path, "mafft")) {
     path <- mafft.path
-  } else {
+  } else if (Sys.info()[['sysname']] %in% "Windows") {
+    path <- file.path(mafft.path,"mafft.bat")
+  }  else {
     # add on executable to path if not already present
     path <- file.path(mafft.path, "mafft")
   }
@@ -80,3 +82,28 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
   return(path)
 }
 
+
+#' Converts FASTA to STOCKHOLM
+#'
+#' The HMMER binary version for windows does not recognize FASTA files to build the
+#' hmm profile. This function creates a STOCKHOLM file readable by HMMER 3.0
+#'
+#' @param fasta.file fasta object to be converted
+#'
+#' @return TRUE/FALSE
+#'
+#' @keywords internal
+#'
+fasta_to_stockholm <- function(fasta.file){
+stock.name <- gsub(fasta.file, pattern = ".fasta", replacement = ".stockholm"
+)
+seq <- seqinr::read.fasta(fasta.file)
+seq.seq <- lapply(seqinr::getSequence(seq), function (x) (paste0(x,collapse="")))
+seq.names <- seqinr::getName(seq)
+seq.final <- list()
+for (i in 1:length(seq)){
+  seq.final[[i]] <- paste(seq.names[[i]],seq.seq[[i]], sep = " ")
+}
+seq.final <- unlist(seq.final)
+writeLines(c("# STOCKHOLM 1.0", seq.final,"//"), con = stock.name, sep = "\n")
+}
