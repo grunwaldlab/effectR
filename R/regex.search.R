@@ -10,7 +10,7 @@
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' regex.search(ORF)
 #'
-regex.search <- function(sequence=sequence, motif="RxLR"){
+regex.search <- function(sequence, motif = "RxLR"){
  if (unique(unlist(lapply(sequence, class))) != "SeqFastadna") {
     stop("The object is not a list of sequences read by seqinr.")
   }

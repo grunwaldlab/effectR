@@ -4,20 +4,21 @@
 \alias{hmm.search}
 \title{Searching for motifs using HMM searches}
 \usage{
-hmm.search(original.seq = "file.fasta", regex.seq = sequences,
-  mafft.path = "/usr/local/bin/", num.threads = 2,
-  hmm.path = "/usr/local/bin/")
+hmm.search(original.seq, regex.seq, mafft.path = NULL, num.threads = 2,
+  hmm.path = NULL, seed = sample(1:10000, 1))
 }
 \arguments{
-\item{original.seq}{The path for the original six-frame transaltion FASTA file}
+\item{original.seq}{The path for the original six-frame translation FASTA file}
 
 \item{regex.seq}{A list of \code{SeqFastadna} objects resulting from \code{\link{regex.search}}. The HMM profile will be constructed using these sequences}
 
-\item{mafft.path}{Local path of the MAFFT binary executable file}
+\item{mafft.path}{Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the program search path.}
 
 \item{num.threads}{Number of threads to be used by MAFFT}
 
-\item{hmm.path}{Local path of the HMMER binaries}
+\item{hmm.path}{Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the program search path.}
+
+\item{seed}{The seed to used with HMMER commands. Set this to get the same output each time}
 }
 \value{
 A list of three elements: REGEX candidate effectors, HMM candidate effectors, and HMM results table.
@@ -30,16 +31,16 @@ This function uses MAFFT and HMMER to search for sequences with RxLR or CRN moti
 After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.
 }
 \note{
-The user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
+If MAFFT/HMMER are not the program search path, the user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
 }
 \examples{
 
 \dontrun{
+
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(ORF, motif="RxLR")
-candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
-                  mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX)
 }
 }
 \keyword{effector}

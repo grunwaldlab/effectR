@@ -1,4 +1,8 @@
-#' Data files included in the package: candidate.rxlr is the result if the effector.summary function for new users that have not installed the additional software used by the effectR package
+#' An example of `effector.summary` output
+#'
+#' `candidate.rxlr` is an example result of the \code{\link{effector.summary}} function
+#' for new users that have not installed the additional software used by the
+#' effectR package.
 #'
 #' @name candidate.rxlr
 #' @docType data

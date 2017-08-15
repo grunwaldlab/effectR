@@ -1,30 +1,31 @@
 #' Searching for motifs using HMM searches
 #'
 #' This function uses MAFFT and HMMER to search for sequences with RxLR or CRN motifs using hidden markov models.
-#' @param original.seq The path for the original six-frame transaltion FASTA file
+#' @param original.seq The path for the original six-frame translation FASTA file
 #' @param regex.seq A list of \code{SeqFastadna} objects resulting from \code{\link{regex.search}}. The HMM profile will be constructed using these sequences
-#' @param mafft.path Local path of the MAFFT binary executable file
-#' @param hmm.path Local path of the HMMER binaries
+#' @param mafft.path Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the program search path.
+#' @param hmm.path Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the program search path.
 #' @param num.threads Number of threads to be used by MAFFT
+#' @param seed The seed to used with HMMER commands. Set this to get the same output each time
 #' @keywords regex effector
 #' @export
 #' @return A list of three elements: REGEX candidate effectors, HMM candidate effectors, and HMM results table.
 #' @examples
 #'
 #'\dontrun{
+#'
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif="RxLR")
-#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX,
-#'                   mafft.path="/usr/local/bin/", hmm.path="/usr/local/bin/", num.threads = 2)
+#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX)
 #' }
 #' @details
 #' \code{hmm.search} uses the results from \code{\link{regex.search}} to search for motifs of interest using hidden markov models after aligning the sequences with MAFFT.
 #' After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.
 #' @note
-#' The user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
-
-hmm.search <-  function(original.seq = "file.fasta", regex.seq = sequences, mafft.path="/usr/local/bin/", num.threads = 2, hmm.path="/usr/local/bin/"){
+#' If MAFFT/HMMER are not the program search path, the user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
+hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads = 2, hmm.path = NULL, seed = sample(1:10000, 1)){
+  set.seed(seed)
   sequences <- regex.seq
   if (unique(unlist(lapply(sequences, class))) != "SeqFastadna") {
     stop("The object is not a list of sequences read by seqinr.")
@@ -48,45 +49,52 @@ hmm.search <-  function(original.seq = "file.fasta", regex.seq = sequences, maff
   # MAFFT alignment
   cat("Starting MAFFT alignment.\n")
   cat("---\n")
-  cat(paste0("Detecting if MAFFT is installed in the specified mafft.path: "), mafft.path,"\n")
   Sys.sleep(1)
-  if (file.exists(paste0(mafft.path, "/mafft"))){
-    cat("Executing MAFFT\nPlease be patient\n")
-    seqinr::write.fasta(sequences = seqinr::getSequence(sequences), names=seqinr::getName(sequences), file.out = file.name)
-    mafft.command <- paste0(mafft.path,"mafft --legacygappenalty --genafpair --maxiterate 1000 --thread ", num.threads ," --quiet ",file.name," > ",mafft.out.name)
-    system(mafft.command)
-    cat("MAFFT alignment finished!")
-    cat("\n")}
-  else {
-    stop("MAFFT not found in the specified path.\n Please check your MAFFT path (go to sh and ask `which mafft`) or MAFTT installation")}
+  cat("Executing MAFFT\nPlease be patient\n")
+  seqinr::write.fasta(sequences = seqinr::getSequence(sequences), names=seqinr::getName(sequences), file.out = file.name)
+  mafft.command <- c(get_mafft_path(mafft.path),
+                     "--legacygappenalty",
+                     "--genafpair",
+                     "--maxiterate", "1000",
+                     "--thread", num.threads,
+                     "--quiet", file.name)
+  system2(mafft.command, stdout = mafft.out.name)
+  cat("MAFFT alignment finished!")
+  cat("\n")
+
   # HMM
   cat("Starting HMM\n")
-    cat("---\n")
+  cat("---\n")
   cat("Creating HMM profile\n\n")
-    if(file.exists(mafft.out.name) == F){
-      stop("No MAFFT alignment found")
-    }
-
-  ## HMM build
-
-  if (file.exists(paste0(hmm.path, "/hmmbuild")) == F ){
-   stop(paste0("hmmbuild not found in ",hmm.path,"\nCheck your HMMER installation path\n"))
-  } else if (file.exists(paste0(hmm.path, "/hmmpress")) == F ){
-   stop(paste0("hmmpress not found in ",hmm.path,"\nCheck your HMMER installation path\n"))
-  }  else if (file.exists(paste0(hmm.path, "/hmmsearch")) == F ){
-    stop(paste0("hmmsearch not found in ",hmm.path,"\nCheck your HMMER installation path\n"))
+  if(file.exists(mafft.out.name) == F){
+    stop("No MAFFT alignment found")
   }
 
-  unlink(paste0(tmp.dir,"/",hmmbuild.out))
-  hmmbuild <- paste0(hmm.path, "/hmmbuild --amino ",hmmbuild.out," ",mafft.out.name)
-  system(hmmbuild, ignore.stdout = T, ignore.stderr = F)
-  system(paste0(hmm.path,"hmmpress ", hmmbuild.out), ignore.stdout = F, ignore.stderr = F)
+  ## HMM build
+  unlink(file.path(tmp.dir, hmmbuild.out))
+  hmmbuild_command <- c(get_hmmer_path("hmmbuild", hmm.path),
+                        "--amino",
+                        "--seed", seed,
+                        hmmbuild.out,
+                        mafft.out.name)
+  system2(hmmbuild_command, stdout = FALSE)
+
+  ## HMM Press
+  hmmpress_command <- c(get_hmmer_path("hmmpress", hmm.path),
+                        hmmbuild.out)
+  system2(hmmpress_command)
   system(paste0("perl -pi -e 's/ {2,}/\t/g' ",hmmbuild.out))
   cat("HMM profile created.\n")
 
   ## HMM search
   cat("\nStarting HMM searches\n")
-  system(paste0(hmm.path, "hmmsearch -T 0 --tblout ", hmmsearch.out," ",hmmbuild.out," ",original.seq), ignore.stdout = F, ignore.stderr = F)
+  hmmsearch_command <- c(get_hmmer_path("hmmsearch", hmm.path),
+                         "-T", "0",
+                         "--seed", seed,
+                         "--tblout", hmmsearch.out,
+                         hmmbuild.out,
+                         original.seq)
+  system2(hmmsearch_command)
   system(paste0("perl -pi -e 's/ {2,}/\t/g' ",hmmsearch.out))
   cat("\n")
   cat("hmmsearch finished!\n")
@@ -102,7 +110,7 @@ hmm.search <-  function(original.seq = "file.fasta", regex.seq = sequences, maff
   cat(paste0("Total of sequences found in HMM: ",  length(total.seq[[2]]), "\n"))
   cat(paste0("Total of redundant hits: ", sum(duplicated(unlist(lapply(total.seq[c(1,2)], function (x) seqinr::getName(x))))),"\n"))
   cat(paste0("Number of effector candidates: ",length(unique(unlist(lapply(total.seq[c(1,2)], function (x) seqinr::getName(x)))))))
-  unlink(paste0(tmp.dir,"/*"), recursive = T)
+  unlink(file.path(tmp.dir,"*"), recursive = T)
   setwd(original.dir)
   return(total.seq)
 }

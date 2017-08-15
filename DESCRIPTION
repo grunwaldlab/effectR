@@ -22,4 +22,3 @@ Suggests: knitr,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-LazyData: true
