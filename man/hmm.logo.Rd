@@ -4,7 +4,7 @@
 \alias{hmm.logo}
 \title{Plots the relative frequencies of each position for \code{hmmsearch} table.}
 \usage{
-hmm.logo(hmm.table = hmm.table)
+hmm.logo(hmm.table)
 }
 \arguments{
 \item{hmm.table}{The HMM profile table resulting from \code{\link{hmm.search}}}

@@ -14,7 +14,7 @@
 #' hmm.logo(candidate.rxlr$HMM_Table)
 #'}
 
-hmm.logo <- function (hmm.table=hmm.table) {
+hmm.logo <- function (hmm.table) {
   # Plot
   hmm <- hmm.table
   colnames(hmm) <- hmm[1,]

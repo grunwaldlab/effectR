@@ -15,7 +15,7 @@
 #' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq=REGEX, num.threads = 2)
 #' effector.summary(candidate.rxlr)
 #'}
-effector.summary <- function (hmm.result=hmm.result, motif="RxLR"){
+effector.summary <- function (hmm.result, motif="RxLR"){
   motif.out <- list()
   if (length(hmm.result) == 3) {
     summ.dataf <- c(hmm.result[[1]],hmm.result[[2]])

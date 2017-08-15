@@ -4,7 +4,7 @@
 \alias{effector.summary}
 \title{Returns non-redundant sequences from hmm.search or regex.search and generates a motif table}
 \usage{
-effector.summary(hmm.result = hmm.result, motif = "RxLR")
+effector.summary(hmm.result, motif = "RxLR")
 }
 \arguments{
 \item{hmm.result}{A list of \code{SeqFastadna} objects obtained from \code{\link{regex.search}} or \code{\link{hmm.search}}}

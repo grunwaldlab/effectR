@@ -4,7 +4,7 @@
 \alias{regex.search}
 \title{Searching for motifs using regular expressions (REGEX)}
 \usage{
-regex.search(sequence = sequence, motif = "RxLR")
+regex.search(sequence, motif = "RxLR")
 }
 \arguments{
 \item{sequence}{A list of \code{SeqFastadna} objects from \code{seqinr} \code{\link{read.fasta}}.}
