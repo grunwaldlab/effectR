@@ -14,24 +14,28 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
                            verbose = FALSE) {
   # Set defualt path
   if (is.null(mafft.path)) {
-    mafft.path <- "mafft"
+    path <- "mafft"
+  } else if (endsWith(mafft.path, "mafft")) {
+    path <- mafft.path
   } else {
-    mafft.path <- file.path(mafft.path, "mafft")
+    # add on executable to path if not already present
+    path <- file.path(mafft.path, "mafft")
   }
 
-  # Print progress
-  if (verbose) {
-    message(paste0("Checking if MAFFT is installed in the specified path: '", mafft.path,"'"))
-  }
 
   # Check if mafft is installed
-  is_installed <- system2(mafft.path, "--version", stderr = NULL) == 0
+  is_installed <- system2(path, "--version", stderr = NULL) == 0
   if (! is_installed && error) {
-    stop(paste0("MAFFT not found in the specified path: '", mafft.path,
-                "'\n Please check your MAFFT installation."), call. = FALSE)
+    if (is.null(mafft.path)) {
+      stop(paste0("MAFFT not found in your computer's search path.",
+                  "'\n Please check that MAFFT is installed and in the search path or specify the path to the MAFFT installation using the `mafft.path` option."), call. = FALSE)
+    } else {
+      stop(paste0("MAFFT not found in the specified path: '", path,
+                  "'\n Please check your MAFFT installation."), call. = FALSE)
+    }
   }
 
-  return(mafft.path)
+  return(path)
 }
 
 #' Check if HMMER is installed and return path
@@ -51,23 +55,28 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
                            verbose = FALSE) {
   # Set defualt path
   if (is.null(hmmer.path)) {
-    hmmer.path <- command
+    path <- command
   } else {
-    hmmer.path <- file.path(hmmer.path, command)
+    path <- file.path(hmmer.path, command)
   }
 
   # Print progress
   if (verbose) {
-    message(paste0("Checking if HMMER is installed in the specified path: '", hmmer.path,"'"))
+    message(paste0("Checking if HMMER is installed in the specified path: '", path,"'"))
   }
 
   # Check if mafft is installed
-  is_installed <- system2(hmmer.path, "-h", stderr = NULL, stdout = NULL) == 0
+  is_installed <- system2(path, "-h", stderr = NULL, stdout = NULL) == 0
   if (! is_installed && error) {
-    stop(paste0(command, " not found in the specified path: '", hmmer.path,
-                "'\n Please check your HMMER installation."), call. = FALSE)
+    if (is.null(hmmer.path)) {
+      stop(paste0("HMMER not found in your computer's search path.",
+                  "'\n Please check that HMMER is installed and in the search path or specify the path to the HMMER installation using the `hmm.path` option."), call. = FALSE)
+    } else {
+      stop(paste0("HMMER not found in the specified path: '", path,
+                  "'\n Please check your HMMER installation."), call. = FALSE)
+    }
   }
 
-  return(hmmer.path)
+  return(path)
 }
 

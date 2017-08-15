@@ -5,18 +5,20 @@
 \title{Searching for motifs using HMM searches}
 \usage{
 hmm.search(original.seq, regex.seq, mafft.path = NULL, num.threads = 2,
-  hmm.path = NULL)
+  hmm.path = NULL, seed = sample(1:10000, 1))
 }
 \arguments{
 \item{original.seq}{The path for the original six-frame transaltion FASTA file}
 
 \item{regex.seq}{A list of \code{SeqFastadna} objects resulting from \code{\link{regex.search}}. The HMM profile will be constructed using these sequences}
 
-\item{mafft.path}{Local path of folder containing the MAFFT binary executable file. If not specified, then MAFFT must be in the progarm search path.}
+\item{mafft.path}{Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the progarm search path.}
 
 \item{num.threads}{Number of threads to be used by MAFFT}
 
 \item{hmm.path}{Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the progarm search path.}
+
+\item{seed}{The seed to used with HMMER commands. Set this to get the same output each time}
 }
 \value{
 A list of three elements: REGEX candidate effectors, HMM candidate effectors, and HMM results table.
