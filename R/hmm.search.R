@@ -99,7 +99,7 @@ hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads 
   cat("hmmsearch finished!\n")
 
   ## Reading in hmm results
-  hmm.hits <- utils::read.delim(hmmsearch.out, comment.char = "#", header = F, sep = "",  blank.lines.skip = T, stringsAsFactors = F)[,1]
+  hmm.hits <- utils::read.delim(hmmsearch.out, comment.char = "#", header = F, sep = "", blank.lines.skip = T, stringsAsFactors = F)[,1]
   hmm.table <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 16, sep = "", fill = T, stringsAsFactors = F)
   total.seq <- seqinr::read.fasta(original.seq)
   hmm.seq <- total.seq[seqinr::getName(total.seq) %in% hmm.hits]
