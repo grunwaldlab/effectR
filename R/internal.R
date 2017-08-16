@@ -12,7 +12,7 @@
 #' @keywords internal
 get_mafft_path <- function(mafft.path = NULL, error = TRUE,
                            verbose = FALSE) {
-  # Set defualt path
+  # Set default path
   if (is.null(mafft.path)) {
     path <- unname(Sys.which("mafft"))
   } else if (endsWith(mafft.path, "mafft")) {
@@ -26,7 +26,7 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
 
 
   # Check if mafft is installed
-  is_installed <- system2(path, "--version", stderr = NULL) == 0
+  is_installed <- file.exists(path) == T
   if (! is_installed && error) {
     if (is.null(mafft.path)) {
       stop(paste0("MAFFT not found in your computer's search path.",
@@ -34,9 +34,8 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
     } else {
       stop(paste0("MAFFT not found in the specified path: '", path,
                   "'\n Please check your MAFFT installation."), call. = FALSE)
+      }
     }
-  }
-
   return(path)
 }
 
@@ -55,7 +54,7 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
 #' @keywords internal
 get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
                            verbose = FALSE) {
-  # Set defualt path
+  # Set default path
   if (is.null(hmmer.path)) {
     path <- unname(Sys.which(command))
   } else {

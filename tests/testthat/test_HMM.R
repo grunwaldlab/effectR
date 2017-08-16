@@ -39,14 +39,3 @@ test_that("Invalid dependency paths cause understandable errors ", {
                "HMMER not found in the specified path")
 })
 
-test_that("MAFFT path option accepts both directory and file ", {
-  skip_on_cran()
-  mafft_path <- system2(c("which", "mafft"), stdout = TRUE)
-  expect_equal({
-    set.seed(1)
-    hmm.search(original.seq = fasta.file, regex.seq = REGEX, seed = 1, mafft.path = mafft_path)
-  }, {
-    set.seed(1)
-    hmm.search(original.seq = fasta.file, regex.seq = REGEX, seed = 1, mafft.path = dirname(mafft_path))
-  })
-})
