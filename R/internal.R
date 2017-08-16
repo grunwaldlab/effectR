@@ -34,8 +34,8 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
     } else {
       stop(paste0("MAFFT not found in the specified path: '", path,
                   "'\n Please check your MAFFT installation."), call. = FALSE)
-      }
     }
+  }
   return(path)
 }
 
@@ -54,6 +54,7 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
 #' @keywords internal
 get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
                            verbose = FALSE) {
+
   # Set default path
   if (is.null(hmmer.path)) {
     path <- unname(Sys.which(command))
@@ -94,15 +95,15 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
 #' @keywords internal
 #'
 fasta_to_stockholm <- function(fasta.file){
-stock.name <- gsub(fasta.file, pattern = ".fasta", replacement = ".stockholm"
-)
-seq <- seqinr::read.fasta(fasta.file)
-seq.seq <- lapply(seqinr::getSequence(seq), function (x) (paste0(x,collapse="")))
-seq.names <- seqinr::getName(seq)
-seq.final <- list()
-for (i in 1:length(seq)){
-  seq.final[[i]] <- paste(seq.names[[i]],seq.seq[[i]], sep = " ")
-}
-seq.final <- unlist(seq.final)
-writeLines(c("# STOCKHOLM 1.0", seq.final,"//"), con = stock.name, sep = "\n")
+  stock.name <- gsub(fasta.file, pattern = ".fasta", replacement = ".stockholm"
+  )
+  seq <- seqinr::read.fasta(fasta.file)
+  seq.seq <- lapply(seqinr::getSequence(seq), function (x) (paste0(x,collapse="")))
+  seq.names <- seqinr::getName(seq)
+  seq.final <- list()
+  for (i in 1:length(seq)){
+    seq.final[[i]] <- paste(seq.names[[i]],seq.seq[[i]], sep = " ")
+  }
+  seq.final <- unlist(seq.final)
+  writeLines(c("# STOCKHOLM 1.0", seq.final,"//"), con = stock.name, sep = "\n")
 }

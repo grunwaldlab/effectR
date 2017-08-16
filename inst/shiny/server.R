@@ -2,10 +2,9 @@
 require(shiny)
 require(shinyjs)
 require(seqinr)
-require(pbapply)
 require(ggplot2)
 require(viridis)
-require(reshape)
+require(reshape2)
 
 # Max size limit:
 options(shiny.maxRequestSize=70*4024^2)
@@ -20,8 +19,8 @@ file.name <- c("REGEX.fasta")
 mafft.out.name <- c("MAFFT.fasta")
 hmmbuild.out <- c("hmmbuild.hmm")
 hmmsearch.out <- c("hmmsearch.txt")
-mafft.path = NULL
-hmm.path = NULL
+mafft.path <- mafft.path.shiny
+hmm.path <- hmm.path.shiny
 original.dir <- getwd()
 
 # TMP dir
@@ -32,7 +31,7 @@ setwd(tmp.dir)
 
 get_mafft_path <- function(mafft.path = NULL, error = TRUE,
                            verbose = FALSE) {
-  # Set defualt path
+  # Set default path
   if (is.null(mafft.path)) {
     path <- unname(Sys.which("mafft"))
   } else if (endsWith(mafft.path, "mafft")) {
@@ -319,7 +318,7 @@ shinyServer(function(input, output, session) {
             hmm.sums <- apply(hmm.sums, 2, function (x) x - mean(as.numeric(as.character(x))))
             hmm.sums[hmm.sums < 0] <- 0
             # Melt HMM
-            hmm.m <- melt(t(hmm.sums))
+            hmm.m <- reshape2::melt(t(hmm.sums))
             colnames(hmm.m) <- c("element","position","bits")
             hmm.m$bits <- as.numeric(as.character(hmm.m$bits))
             p <- ggplot(hmm.m, aes(x=position, y=bits, fill=element)) + geom_bar(stat = "identity",position = "stack",width=1, alpha=0.5) + geom_text(aes(label=element, size=bits), position='stack') +  scale_fill_viridis(discrete=TRUE) + theme_bw() + ylab("Relative Frequency (bits)") + guides(fill=FALSE)
@@ -346,11 +345,7 @@ shinyServer(function(input, output, session) {
     }
   })
 
-
-
-
   # Step 3B: Combine datasets and create REGEX table
-
   # Table
   summary_table <- reactive (
     if(file.exists("hmmsearch.txt")){
@@ -376,7 +371,6 @@ shinyServer(function(input, output, session) {
       summary_table()
     })
   })
-
   # Step 3C: Motif Table
   motif_table <- reactive({
     sequences <- lapply(final_fasta(), function (x) paste(unlist(x),collapse = ""))
