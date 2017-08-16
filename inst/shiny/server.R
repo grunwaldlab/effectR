@@ -302,9 +302,9 @@ shinyServer(function(input, output, session) {
           withProgress(message = 'Constructing HMM logo...', value = 100, {
             # Plot
             if (Sys.info()[['sysname']] %in% "Windows"){
-              hmm.table <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 14, sep = "", fill = T, stringsAsFactors = F)
+              hmm <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 14, sep = "", fill = T, stringsAsFactors = F)
             } else {
-              hmm.table <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 16, sep = "", fill = T, stringsAsFactors = F)
+              hmm <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 16, sep = "", fill = T, stringsAsFactors = F)
             }
             colnames(hmm) <- hmm[1,]
             hmm <- hmm[-(1:5),]
