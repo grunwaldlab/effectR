@@ -15,16 +15,96 @@ options(shiny.maxRequestSize=70*4024^2)
 jscode <- "shinyjs.refresh = function() { history.go(0); }"
 
 # All variable names
+original.seq <- c("AA.fasta")
 file.name <- c("REGEX.fasta")
 mafft.out.name <- c("MAFFT.fasta")
 hmmbuild.out <- c("hmmbuild.hmm")
 hmmsearch.out <- c("hmmsearch.txt")
-
+mafft.path = NULL
+hmm.path = NULL
 original.dir <- getwd()
 
 # TMP dir
 tmp.dir <- tempdir()
 setwd(tmp.dir)
+
+### Additional scripts
+
+get_mafft_path <- function(mafft.path = NULL, error = TRUE,
+                           verbose = FALSE) {
+  # Set defualt path
+  if (is.null(mafft.path)) {
+    path <- unname(Sys.which("mafft"))
+  } else if (endsWith(mafft.path, "mafft")) {
+    path <- mafft.path
+  } else if (Sys.info()[['sysname']] %in% "Windows") {
+    path <- file.path(mafft.path,"mafft.bat")
+  }  else {
+    # add on executable to path if not already present
+    path <- file.path(mafft.path, "mafft")
+  }
+
+
+  # Check if mafft is installed
+  is_installed <- system2(path, "--version", stderr = NULL) == 0
+  if (! is_installed && error) {
+    if (is.null(mafft.path)) {
+      stop(paste0("MAFFT not found in your computer's search path.",
+                  "'\n Please check that MAFFT is installed and in the search path or specify the path to the MAFFT installation using the `mafft.path` option."), call. = FALSE)
+    } else {
+      stop(paste0("MAFFT not found in the specified path: '", path,
+                  "'\n Please check your MAFFT installation."), call. = FALSE)
+    }
+  }
+
+  return(path)
+}
+
+# Get HMMER path
+get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
+                           verbose = FALSE) {
+  # Set defualt path
+  if (is.null(hmmer.path)) {
+    path <- unname(Sys.which(command))
+  } else {
+    path <- file.path(hmmer.path, command)
+  }
+
+  # Print progress
+  if (verbose) {
+    message(paste0("Checking if HMMER is installed in the specified path: '", path,"'"))
+  }
+
+  # Check if mafft is installed
+  is_installed <- system2(path, "-h", stderr = NULL, stdout = NULL) == 0
+  if (! is_installed && error) {
+    if (is.null(hmmer.path)) {
+      stop(paste0("HMMER not found in your computer's search path.",
+                  "'\n Please check that HMMER is installed and in the search path or specify the path to the HMMER installation using the `hmm.path` option."), call. = FALSE)
+    } else {
+      stop(paste0("HMMER not found in the specified path: '", path,
+                  "'\n Please check your HMMER installation."), call. = FALSE)
+    }
+  }
+
+  return(path)
+}
+
+
+# Converts FASTA to STOCKHOLM
+fasta_to_stockholm <- function(fasta.file){
+  stock.name <- gsub(fasta.file, pattern = ".fasta", replacement = ".stockholm"
+  )
+  seq <- seqinr::read.fasta(fasta.file)
+  seq.seq <- lapply(seqinr::getSequence(seq), function (x) (paste0(x,collapse="")))
+  seq.names <- seqinr::getName(seq)
+  seq.final <- list()
+  for (i in 1:length(seq)){
+    seq.final[[i]] <- paste(seq.names[[i]],seq.seq[[i]], sep = " ")
+  }
+  seq.final <- unlist(seq.final)
+  writeLines(c("# STOCKHOLM 1.0", seq.final,"//"), con = stock.name, sep = "\n")
+}
 
 
 ##### SHINY APP START #######
@@ -119,7 +199,13 @@ shinyServer(function(input, output, session) {
         need(length(regex.seq()) > 4, "Not enough sequences for HMM step. More than 4 sequences with REGEX required to perform HMM search")
       )
       withProgress(message = 'Performing MAFFT alignment', value = 100, {
-        system(paste0(mafft.path.shiny,"/mafft --legacygappenalty --genafpair --maxiterate 1000 --thread 8 --quiet REGEX.fasta > MAFFT.fasta"))
+                mafft.command <- c(get_mafft_path(mafft.path),
+                           "--legacygappenalty",
+                           "--genafpair",
+                           "--maxiterate", "1000",
+                           "--quiet",
+                           file.name)
+        system2(mafft.command, stdout = mafft.out.name )
       })
       cat("MAFFT aligment: Done!")
       cat("\n")
@@ -129,12 +215,34 @@ shinyServer(function(input, output, session) {
     # HMM build
     output$hmmer_press <- renderPrint({
       validate(
-        need(file.exists("MAFFT.fasta") != F, "No HMM performed")
+        need(file.exists(mafft.out.name) != F, "No HMM performed")
       )
       withProgress(message = 'Building HMM model...', value = 100, {
-        system(paste0(hmm.path.shiny, "/hmmbuild --amino hmmbuild.hmm MAFFT.fasta"), ignore.stdout = T, ignore.stderr = T)
-        system(paste0(hmm.path.shiny,"/hmmbuild.hmm"), ignore.stdout = T, ignore.stderr = T)
+        unlink(file.path(tmp.dir, hmmbuild.out))
+        if (Sys.info()[['sysname']] %in% "Windows"){
+          fasta_to_stockholm(fasta.file = mafft.out.name)
+          stock.name <- gsub(mafft.out.name, pattern = ".fasta", replacement = ".stockholm"
+          )
+          hmmbuild_command <- c(get_hmmer_path("hmmbuild.exe", hmm.path),
+                                "--amino",
+                                hmmbuild.out,
+                                stock.name)
+        } else {
+          hmmbuild_command <- c(get_hmmer_path("hmmbuild", hmm.path),
+                                "--amino",
+                                hmmbuild.out,
+                                mafft.out.name)
+        }
+        system2(hmmbuild_command, stdout = F)
         Sys.sleep(0.2)
+        if (Sys.info()[['sysname']] %in% "Windows"){
+          hmmpress_command <- c(get_hmmer_path("hmmpress.exe", hmm.path),
+                                hmmbuild.out)
+        } else {
+          hmmpress_command <- c(get_hmmer_path("hmmpress", hmm.path),
+                                hmmbuild.out)
+        }
+      system2(hmmpress_command)
       })
       cat("HMM model built!")
       cat("\n")
@@ -148,8 +256,20 @@ shinyServer(function(input, output, session) {
         need(file.exists("hmmbuild.hmm") != F, "No HMM performed")
       )
       withProgress(message = 'Performing HMM search...', value = 100, {
-        system(paste0(hmm.path.shiny,"/hmmsearch -T 0 --tblout hmmsearch.txt hmmbuild.hmm AA.fasta"), ignore.stdout = T, ignore.stderr = T)
-        system("perl -pi -e 's/ {2,}/\t/g' hmmsearch.txt")
+        if (Sys.info()[['sysname']] %in% "Windows"){
+          hmmsearch_command <- c(get_hmmer_path("hmmsearch.exe", hmm.path),
+                                 "-T", "0",
+                                 "--tblout", hmmsearch.out,
+                                 hmmbuild.out,
+                                 original.seq)
+        } else {
+          hmmsearch_command <- c(get_hmmer_path("hmmsearch", hmm.path),
+                                 "-T", "0",
+                                 "--tblout", hmmsearch.out,
+                                 hmmbuild.out,
+                                 original.seq)
+        }
+        system2(hmmsearch_command)
       })
       Sys.sleep(0.2)
       cat("HMM search: Done!")

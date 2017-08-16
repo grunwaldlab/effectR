@@ -98,6 +98,7 @@ hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads 
     hmmpress_command <- c(get_hmmer_path("hmmpress", hmm.path),
                           hmmbuild.out)
   }
+  system2(hmmpress_command)
   cat("HMM profile created.\n")
 
   ## HMM search
