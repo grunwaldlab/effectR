@@ -41,7 +41,11 @@ The `effectR` package uses `MAFFT` and `HMMER3` to perform the hidden markov mod
 
 ### Downloading and installing MAFFT
 
-MAFFT is a multiple sequence alignment program that uses Fourier-transform algorithms to align multiple sequences. We recommend downloading and installing MAFFT by following the instructions and steps in the [MAFFT installation](http://mafft.cbrc.jp/alignment/software/) web site. Make sure that you remember the directory in which `MAFFT` is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:
+MAFFT is a multiple sequence alignment program that uses Fourier-transform algorithms to align multiple sequences. We recommend downloading and installing MAFFT by following the instructions and steps in the [MAFFT installation](http://mafft.cbrc.jp/alignment/software/) web site. 
+
+#### Linux/OS X Users
+
+Make sure that you remember the directory in which `MAFFT` is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:
 
 ```bash
 which mafft
@@ -52,6 +56,16 @@ which mafft
 ```
 For more information about MAFFT go to the MAFFT website: http://mafft.cbrc.jp/
 
+#### Windows Users
+
+MAFFT comes in two main distributions for windows:
+
+- [A version that requires a UNIX-like interface called Cygwin](http://mafft.cbrc.jp/alignment/software/windows_cygwin.html)
+- [An "all-in-one" version"](http://mafft.cbrc.jp/alignment/software/windows_without_cygwin.html)
+
+Please, download and install the **all-in-one** version.
+We recommend that you download and save MAFFT in your Desktop, as it will make yyour path easily accesible.
+
 ### Downloading and installing HMMER
 
 HMMER is used for searching sequence databases for sequence homologs. It uses hidden Markov models (profile HMMs) to search for sequences with hits to similar patterns than the profile. We use three main HMMER tools: 
@@ -61,6 +75,8 @@ HMMER is used for searching sequence databases for sequence homologs. It uses hi
   - `hmmsearch` to excecute the HMM search in our sequence queries basde on the HMM profile
 
 The `effectR` package requires all of these tools. A correct `HMMER` installation will install all three programs.
+
+#### Linux/OS X users 
 
 We recommend downloading and installing HMMER by following the instructions and steps in the [HMMER installation](eddylab.org/software/hmmer3/3.1b2/Userguide.pdf) web site. Make sure that you remember the directory in which `HMMER` is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:
 
@@ -78,6 +94,9 @@ which hmmsearch
 
 For more information about HMMER go to the HMMER website: http://hmmer.org/
 
+#### Windows users
+
+To use the `effectR` package in Windows, the user **must** download the Windows binaries of [HMMER](http://hmmer.org/binaries/hmmer3.0_windows.zip). `effectR` will not work with any other version of HMMER.  
 
 ## Data input
 
@@ -122,17 +141,16 @@ We observe that the `REGEX` object has 17 sequences with the RxLR motif. These s
 To perform the HMM search and obtain all possible effector candidates from a proteome, `effectR` uses the `REGEX` results as a template to create a HMM profile and perform a search across the proteome of interest.
 We have created the `hmm.search` function in order to perfomr this search.
 The `hmm.search` function requires a local installation of `MAFFT` and `HMMER` in order to perform the searches. The *absolute paths* of the binaries must be specified in the `mafft.path` and `hmmer.path` options of the `hmm.search` function.
+
+> Note for Windows users:
+Please use the ABSOLUTE PATH for HMMER and MAFFT or effectR will not work (e.g. `mafft.path ="C:/User/Banana/Desktop/mafft/"`)
+
 In addition, the `hmm.function` requires the path of the original FASTA file containing the translated ORF's in the `original.seq` parameter of the function. `hmm.search` will use this file as a query in the `hmmsearch` software from HMMER, and search for all sequences with hits against the HMM profile created with the REGEX results.
 
 We will continue or example by performing a `hmm.search` in our example data set. We will include the original example FASTA file location (stored in the `fasta.file` object), the location of the `MAFFT` binary and the location of the HMMER binaries:
 
-<<<<<<< HEAD
 ```{r, eval=FALSE}
 candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = ORF, mafft.path = "/usr/local/bin/", hmm.path = "/usr/local/bin/")
-=======
-```{r, eval=F}
-candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX, mafft.path = "/usr/local/bin/", hmm.path = "/usr/local/bin/")
->>>>>>> origin/master
 ```
 
 The `hmm.search` function has resulted in 27 effector candidates. 
@@ -218,7 +236,7 @@ write.fasta(sequences = getSequence(summary.list$consensus.sequences), names = g
 
 To determine if the HMM profile includes the motifs of interest, we have created the function `hmm.logo`.
 The function `hmm.logo` reads the HMM profile (obtained from the `hmm.search` step) and uses `ggplot2` to create a bar-plot.
-The bar-plot will illustrate the bits (aminoacid score) of each amino acid used to construct the HMM profile according to its consensus position in the HMM profile. 
+The bar-plot will illustrate the bits (amino acid scores) of each amino acid used to construct the HMM profile according to its consensus position in the HMM profile. 
 To learn more about sequence logo plots visit this [wikipedia article](https://en.wikipedia.org/wiki/Sequence_logo).
 
 The `hmm.logo` is a wrapper that parses the HMM profile table and plots the parsed table results in `ggplot2`.
