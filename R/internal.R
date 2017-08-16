@@ -12,18 +12,22 @@
 #' @keywords internal
 get_mafft_path <- function(mafft.path = NULL, error = TRUE,
                            verbose = FALSE) {
+  # Get name of mafft executable
+  if (Sys.info()[['sysname']] == "Windows") {
+    mafft_file <- "mafft.bat"
+  } else {
+    mafft_file <- "mafft"
+  }
+
   # Set defualt path
   if (is.null(mafft.path)) {
     path <- unname(Sys.which("mafft"))
-  } else if (endsWith(mafft.path, "mafft")) {
+  } else if (endsWith(mafft.path, mafft_file)) { # if mafft executable is in the path...
     path <- mafft.path
-  } else if (Sys.info()[['sysname']] %in% "Windows") {
-    path <- file.path(mafft.path,"mafft.bat")
-  }  else {
+  } else {
     # add on executable to path if not already present
-    path <- file.path(mafft.path, "mafft")
+    path <- file.path(mafft.path, mafft_file)
   }
-
 
   # Check if mafft is installed
   is_installed <- system2(path, "--version", stderr = NULL) == 0
@@ -95,15 +99,15 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
 #' @keywords internal
 #'
 fasta_to_stockholm <- function(fasta.file){
-stock.name <- gsub(fasta.file, pattern = ".fasta", replacement = ".stockholm"
-)
-seq <- seqinr::read.fasta(fasta.file)
-seq.seq <- lapply(seqinr::getSequence(seq), function (x) (paste0(x,collapse="")))
-seq.names <- seqinr::getName(seq)
-seq.final <- list()
-for (i in 1:length(seq)){
-  seq.final[[i]] <- paste(seq.names[[i]],seq.seq[[i]], sep = " ")
-}
-seq.final <- unlist(seq.final)
-writeLines(c("# STOCKHOLM 1.0", seq.final,"//"), con = stock.name, sep = "\n")
+  stock.name <- gsub(fasta.file, pattern = ".fasta", replacement = ".stockholm"
+  )
+  seq <- seqinr::read.fasta(fasta.file)
+  seq.seq <- lapply(seqinr::getSequence(seq), function (x) (paste0(x,collapse="")))
+  seq.names <- seqinr::getName(seq)
+  seq.final <- list()
+  for (i in 1:length(seq)){
+    seq.final[[i]] <- paste(seq.names[[i]],seq.seq[[i]], sep = " ")
+  }
+  seq.final <- unlist(seq.final)
+  writeLines(c("# STOCKHOLM 1.0", seq.final,"//"), con = stock.name, sep = "\n")
 }
