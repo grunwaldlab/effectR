@@ -19,6 +19,7 @@ test_that("regex.search returns 17 sequences with RxLR motifs ", {
   expect_equal(num.hits, c(1:17))
 })
 
+if (is.null(get_mafft_path()) == FALSE){
 test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19 rows in HMM table ", {
   skip_on_cran()
   candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX, seed = 1)
@@ -38,4 +39,4 @@ test_that("Invalid dependency paths cause understandable errors ", {
                           hmm.path = "/something/very/misguided"),
                "HMMER not found in the specified path")
 })
-
+}
