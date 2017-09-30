@@ -28,7 +28,7 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
   return(path)
 }
 
-get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
+get_hmmer_path <- function(command = "hmmsearch", hmmer.path = NULL, error = TRUE,
                            verbose = FALSE) {
   # Set default path
   if (is.null(hmmer.path)) {
@@ -56,6 +56,10 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
   return(path)
 }
 
+
+test.mafft <- try(get_mafft_path(), silent = T)
+test.hmmer <- try(get_hmmer_path(), silent = T)
+
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = 'effectR')
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(sequence = ORF, motif = "RxLR")
@@ -64,7 +68,7 @@ num.hits <- grep(REGEX.seq, pattern="^\\w{12,60}r\\wlr\\w{6,10}eer", perl = T,ig
 
 context("Testing effector table summary")
 
-if (is.null(expect_error(get_mafft_path())) == FALSE & is.null(expect_error(get_hmmer_path()))){
+if (class(test.mafft) != "try-error" || class(test.hmmer) != "try-error"){
 test_that("effectR can read FASTA alignment correctly ", {
   skip_on_cran()
   candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX)

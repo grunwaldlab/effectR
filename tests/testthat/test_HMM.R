@@ -34,20 +34,7 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
   return(path)
 }
 
-#' Check if HMMER is installed and return path
-#'
-#' Check if HMMER is installed and return path to an executable
-#'
-#' @param command Which command to get the path for. For example "hmmsearch".
-#' @param path Where to look for HMMER. By default it will look on the search
-#'   path.
-#' @param error If \code{TRUE}, throw an error if mafft is not installed.
-#' @param verbose If \code{TRUE}, print progress reports.
-#'
-#' @return TRUE/FALSE
-#'
-#' @keywords internal
-get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
+get_hmmer_path <- function(command="hmmsearch", hmmer.path = NULL, error = TRUE,
                            verbose = FALSE) {
 
   # Set default path
@@ -78,6 +65,8 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
 }
 
 
+test.mafft <- try(get_mafft_path(), silent = T)
+test.hmmer <- try(get_hmmer_path(), silent = T)
 
 context("Generating RxLR candidates from HMM")
 
@@ -93,8 +82,9 @@ test_that("regex.search returns 17 sequences with RxLR motifs ", {
   expect_equal(num.hits, c(1:17))
 })
 
-if (is.null(expect_error(get_mafft_path())) == FALSE & is.null(expect_error(get_hmmer_path()))){
-test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19 rows in HMM table ", {
+
+if (class(test.mafft) != "try-error" || class(test.hmmer) != "try-error"){
+  test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19 rows in HMM table ", {
   skip_on_cran()
   candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX, seed = 1)
   expect_equal(length(candidate.rxlr), 3)
