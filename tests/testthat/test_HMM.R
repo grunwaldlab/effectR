@@ -5,6 +5,80 @@ REGEX <- regex.search(sequence = ORF, motif = "RxLR")
 REGEX.seq <- lapply(REGEX, function (x) paste(unlist(x),collapse = ""))
 num.hits <- grep(REGEX.seq, pattern="^\\w{12,60}r\\wlr\\w{6,10}eer", perl = T,ignore.case = T)
 
+get_mafft_path <- function(mafft.path = NULL, error = TRUE,
+                           verbose = FALSE) {
+  # Set default path
+  if (is.null(mafft.path)) {
+    path <- unname(Sys.which("mafft"))
+  } else if (endsWith(mafft.path, "mafft")) {
+    path <- mafft.path
+  } else if (Sys.info()[['sysname']] %in% "Windows") {
+    path <- file.path(mafft.path,"mafft.bat")
+  }  else {
+    # add on executable to path if not already present
+    path <- file.path(mafft.path, "mafft")
+  }
+
+
+  # Check if mafft is installed
+  is_installed <- file.exists(path) == T
+  if (! is_installed && error) {
+    if (is.null(mafft.path)) {
+      stop(paste0("MAFFT not found in your computer's search path.",
+                  "'\n Please check that MAFFT is installed and in the search path or specify the path to the MAFFT installation using the `mafft.path` option."), call. = FALSE)
+    } else {
+      stop(paste0("MAFFT not found in the specified path: '", path,
+                  "'\n Please check your MAFFT installation."), call. = FALSE)
+    }
+  }
+  return(path)
+}
+
+#' Check if HMMER is installed and return path
+#'
+#' Check if HMMER is installed and return path to an executable
+#'
+#' @param command Which command to get the path for. For example "hmmsearch".
+#' @param path Where to look for HMMER. By default it will look on the search
+#'   path.
+#' @param error If \code{TRUE}, throw an error if mafft is not installed.
+#' @param verbose If \code{TRUE}, print progress reports.
+#'
+#' @return TRUE/FALSE
+#'
+#' @keywords internal
+get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
+                           verbose = FALSE) {
+
+  # Set default path
+  if (is.null(hmmer.path)) {
+    path <- unname(Sys.which(command))
+  } else {
+    path <- file.path(hmmer.path, command)
+  }
+
+  # Print progress
+  if (verbose) {
+    message(paste0("Checking if HMMER is installed in the specified path: '", path,"'"))
+  }
+
+  # Check if mafft is installed
+  is_installed <- system2(path, "-h", stderr = NULL, stdout = NULL) == 0
+  if (! is_installed && error) {
+    if (is.null(hmmer.path)) {
+      stop(paste0("HMMER not found in your computer's search path.",
+                  "'\n Please check that HMMER is installed and in the search path or specify the path to the HMMER installation using the `hmm.path` option."), call. = FALSE)
+    } else {
+      stop(paste0("HMMER not found in the specified path: '", path,
+                  "'\n Please check your HMMER installation."), call. = FALSE)
+    }
+  }
+
+  return(path)
+}
+
+
+
 context("Generating RxLR candidates from HMM")
 
 test_that("effectR can read FASTA alignment correctly ", {
@@ -19,7 +93,7 @@ test_that("regex.search returns 17 sequences with RxLR motifs ", {
   expect_equal(num.hits, c(1:17))
 })
 
-if (is.null(get_mafft_path()) == FALSE){
+if (is.null(expect_error(get_mafft_path())) == FALSE & is.null(expect_error(get_hmmer_path()))){
 test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19 rows in HMM table ", {
   skip_on_cran()
   candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX, seed = 1)
@@ -32,6 +106,7 @@ test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19
 })
 
 test_that("Invalid dependency paths cause understandable errors ", {
+  skip_on_cran()
   expect_error(hmm.search(original.seq = fasta.file, regex.seq = REGEX, seed = 1,
                           mafft.path = "This is not right..."),
                "MAFFT not found in the specified path")
