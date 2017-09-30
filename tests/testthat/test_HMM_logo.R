@@ -78,6 +78,7 @@ test_that("regex.search returns 17 sequences with RxLR motifs ", {
   expect_equal(num.hits, c(1:17))
 })
 
+
 if (class(test.mafft) != "try-error" || class(test.hmmer) != "try-error"){
 test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19 rows in HMM table ", {
   skip_on_cran()

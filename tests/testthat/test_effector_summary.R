@@ -68,6 +68,7 @@ num.hits <- grep(REGEX.seq, pattern="^\\w{12,60}r\\wlr\\w{6,10}eer", perl = T,ig
 
 context("Testing effector table summary")
 
+
 if (class(test.mafft) != "try-error" || class(test.hmmer) != "try-error"){
 test_that("effectR can read FASTA alignment correctly ", {
   skip_on_cran()
