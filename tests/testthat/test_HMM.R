@@ -78,6 +78,8 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
 }
 
 
+test.mafft <- try(get_mafft_path(), silent = T)
+test.hmmer <- try(get_hmmer_path(), silent = T)
 
 context("Generating RxLR candidates from HMM")
 
@@ -93,8 +95,9 @@ test_that("regex.search returns 17 sequences with RxLR motifs ", {
   expect_equal(num.hits, c(1:17))
 })
 
-if (is.null(expect_error(get_mafft_path())) == FALSE & is.null(expect_error(get_hmmer_path()))){
-test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19 rows in HMM table ", {
+
+if (class(test.hmmer) != "try-error" || class(test.hmmer) != "try-error"){
+  test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19 rows in HMM table ", {
   skip_on_cran()
   candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX, seed = 1)
   expect_equal(length(candidate.rxlr), 3)
