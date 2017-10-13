@@ -4,12 +4,14 @@
 \alias{regex.search}
 \title{Searching for motifs using regular expressions (REGEX)}
 \usage{
-regex.search(sequence, motif = "RxLR")
+regex.search(sequence, motif = "RxLR", reg.pat = NULL)
 }
 \arguments{
-\item{sequence}{A list of \code{SeqFastadna} objects from \code{seqinr} \code{\link{read.fasta}}.}
+\item{sequence}{A list of \code{SeqFastadna} objects from \code{seqinr} \code{\link{read.fasta}}. The \code{SeqFastadna} object must be comprised by amino acid sequences, not DNA sequences}
 
-\item{motif}{A character string indicating the motif to be searched (RxLR or CRN). Default is RxLR}
+\item{motif}{A character string indicating the motif to be searched. Motifs for two cytoplasmic effectors are added to the function: \code{RxLR} or \code{CRN} effectors. Each of these motifs are associated with a by-default REGEX (\code{reg.pat}). A third option, \code{custom}, allows for the search of custom motifs. The \code{custom} option requires the specification of the motif REGEX pattern in the \code{reg.pat} option, in a \code{\link{regex}} format. Default is RxLR}
+
+\item{reg.pat}{A character string indicating the REGEX pattern for the \code{custom} motif. The specification of the REGEX pattern in must be in \code{\link{regex}} format. Required for \code{custom} option of \code{motif}}
 }
 \description{
 This function uses searches a list of \code{SeqFastadna} objects for sequences with RxLR or CRN motifs.
@@ -17,7 +19,8 @@ This function uses searches a list of \code{SeqFastadna} objects for sequences w
 \examples{
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 ORF <- seqinr::read.fasta(fasta.file)
-regex.search(ORF)
+rxlr.cand <- regex.search(ORF)
+custom.cand <- regex.search(ORF, motif = "custom", reg.pat ="^\\\\w{12,60}r\\\\wlr\\\\w{6,10}eer")
 
 }
 \keyword{effector}

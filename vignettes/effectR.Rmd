@@ -125,8 +125,8 @@ We have created a `ORF` object that includes the list of translated ORF's from t
 To perform the effector search, `effectR` searches for the motifs of interest found in RxLR and CRN motifs. 
 We have created the function `regex.search` to perform the seach of the motif of interest. 
 The function `regex.search` requires the list of `SeqFastadna` objects and the gene family of interest. 
-Here we show an example to search for sequences with RxLR-EER motifs from the XX ORF subset of *P. infestans*.
-This ORF example data set contains 17 sequences with RxLR-EER motifs and XX sequences with the LFLAK motifs found in CRN effectors. 
+Here we show an example to search for sequences with RxLR-EER motifs from the 27 ORF subset of *P. infestans*.
+This ORF example data set contains 17 sequences with RxLR-EER motifs and 27 sequences with the LFLAK motifs found in CRN effectors. 
 We expect to find, then, 17 sequences after using the `regex.search` function with the `motif='RxLR'` parameter:
 
 ```{r}
@@ -135,6 +135,15 @@ length(REGEX)
 ```
 
 We observe that the `REGEX` object has 17 sequences with the RxLR motif. These sequences will be aligned using `MAFFT`, and used to build a HMM profile to search for similar sequences.
+
+In addition to the basic functionality of `regex.search` to obtain both RxLR and CRN candidate genes, we have added the possibility of using a custom regex motif in order to search for non-canonical effectors or other protein motifs from different families of interest. The option `motif = "custom"` is couple with the `reg.pat` option, wich allows for the inclusion of any regular expression in the format specified by the [`regex`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html) function in R. For example, if we want to obtain all candidates with a WV motif in the positions 60 to 90 of the aminoacid, we use the following commands:
+
+```{r}
+reg.pat <- "^\\w{50,60}[w,v]"
+REGEX <- regex.search(sequence = ORF, motif = "custom", reg.pat = reg.pat)
+length(REGEX)
+```
+
 
 ## Multiple sequence alignment and HMMER search
 
