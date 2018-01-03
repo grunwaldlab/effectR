@@ -68,7 +68,7 @@ This column summarizes the candidate ORF into one of 4 categories:
 ### Non-redundant sequences
 
 To export the non-redundant effector candidates that resulted from the `hmm.search` or `regex.search` functions, we use the `write.fasta` function of the `seqinr` package. 
-We recomend the users to read the documentation of the [`seqinr`](http://cran.r-project.org/package=seqinr) package
+We recomend the users to read the documentation of the [`seqinr`](https://cran.r-project.org/package=seqinr) package
 Since the objects that result from the `hmm.search` or `regex.search` function are of the `SeqFastadna` class, we can use any of the function of the `seqinr` package that use this class as well. 
 
 ## Visualizing the HMM profile using a sequence logo-like plot
