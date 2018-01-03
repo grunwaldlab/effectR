@@ -16,7 +16,7 @@ In addition, `effectR` reads and returns the HMM profile to the user and allows 
 ## Requirements 
 
 - R packages:
- - [`seqinr`](https://cran.r-project.org/web/packages/seqinr/seqinr.pdf)
+ - [`seqinr`](https://CRAN.R-project.org/package=seqinr/seqinr.pdf)
  - [`ggplot2`](http://ggplot2.org/)
  
 - External software 

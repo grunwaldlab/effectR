@@ -117,7 +117,7 @@ ORF <- read.fasta(fasta.file)
 head(ORF, n = 2)
 ```
 
-We have created a `ORF` object that includes the list of translated ORF's from the subset of XX ORF's from the *P. infestans* genome. For more information on the `SeqFastadna` objects please read the [`seqinr manual`](https://cran.r-project.org/web/packages/seqinr/seqinr.pdf).
+We have created a `ORF` object that includes the list of translated ORF's from the subset of XX ORF's from the *P. infestans* genome. For more information on the `SeqFastadna` objects please read the [`seqinr manual`](https://cran.r-project.org/package=seqinr).
 
 
 ## REGEX search
