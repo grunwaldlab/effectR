@@ -1,5 +1,5 @@
 library(effectR)
-fasta.file <- system.file("extdata", "test_infestans.fasta", package = 'effectR')
+fasta.file <- system.file("extdata", "REGEX.fasta", package = 'effectR')
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(sequence = ORF, motif = "RxLR")
 REGEX.seq <- lapply(REGEX, function (x) paste(unlist(x),collapse = ""))
@@ -73,13 +73,7 @@ context("Generating RxLR candidates from HMM")
 test_that("effectR can read FASTA alignment correctly ", {
   expect_equal(class(ORF), "list")
   expect_equal(class(ORF[[1]]), "SeqFastadna")
-  expect_equal(length(ORF), 27)
-})
-
-test_that("regex.search returns 17 sequences with RxLR motifs ", {
-  expect_equal(length(REGEX), 17)
-  expect_equal(length(num.hits), 17)
-  expect_equal(num.hits, c(1:17))
+  expect_equal(length(ORF), 17)
 })
 
 
@@ -92,8 +86,7 @@ if (class(test.mafft) != "try-error" || class(test.hmmer) != "try-error"){
   expect_equal(class(candidate.rxlr), "list")
   expect_equal(names(candidate.rxlr), c("REGEX","HMM","HMM_Table"))
   expect_equal(length(candidate.rxlr$REGEX), 17)
-  expect_equal(length(candidate.rxlr$HMM), 19)
-  expect_equal(length(candidate.rxlr$HMM_Table), 21)
+  expect_equal(length(candidate.rxlr$HMM), 17)
 })
 
 test_that("Invalid dependency paths cause understandable errors ", {

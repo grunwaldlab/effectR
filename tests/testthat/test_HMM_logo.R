@@ -59,7 +59,7 @@ get_hmmer_path <- function(command="hmmsearch", hmmer.path = NULL, error = TRUE,
 test.mafft <- try(get_mafft_path(), silent = T)
 test.hmmer <- try(get_hmmer_path(), silent = T)
 
-fasta.file <- system.file("extdata", "test_infestans.fasta", package = 'effectR')
+fasta.file <- system.file("extdata", "REGEX.fasta", package = 'effectR')
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(sequence = ORF, motif = "RxLR")
 REGEX.seq <- lapply(REGEX, function (x) paste(unlist(x),collapse = ""))
@@ -69,13 +69,7 @@ context("Testing HMM logo summary")
 test_that("effectR can read FASTA alignment correctly ", {
   expect_equal(class(ORF), "list")
   expect_equal(class(ORF[[1]]), "SeqFastadna")
-  expect_equal(length(ORF), 27)
-})
-
-test_that("regex.search returns 17 sequences with RxLR motifs ", {
-  expect_equal(length(REGEX), 17)
-  expect_equal(length(num.hits), 17)
-  expect_equal(num.hits, c(1:17))
+  expect_equal(length(ORF), 17)
 })
 
 
@@ -90,8 +84,7 @@ test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19
   expect_equal(class(candidate.rxlr), "list")
   expect_equal(names(candidate.rxlr), c("REGEX","HMM","HMM_Table"))
   expect_equal(length(candidate.rxlr$REGEX), 17)
-  expect_equal(length(candidate.rxlr$HMM), 19)
-  expect_equal(length(candidate.rxlr$HMM_Table), 21)
+  expect_equal(length(candidate.rxlr$HMM), 17)
 })
 
 test_that("effector.summary returns a list with 2 objects, 19 candidates and 19 rows in summary table ", {
@@ -103,8 +96,8 @@ test_that("effector.summary returns a list with 2 objects, 19 candidates and 19 
   expect_equal(length(summary.list), 2)
   expect_equal(class(summary.list), "list")
   expect_equal(names(summary.list), c("consensus.sequences","motif.table"))
-  expect_equal(length(summary.list$consensus.sequences), 19)
-  expect_equal(nrow(summary.list$motif.table), 19)
+  expect_equal(length(summary.list$consensus.sequences), 17)
+  expect_equal(nrow(summary.list$motif.table), 17)
   expect_equal(unique(summary.list$motif.table$MOTIF), "Complete")
 })
 

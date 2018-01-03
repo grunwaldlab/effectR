@@ -24,7 +24,7 @@ regex.search <- function(sequence, motif = "RxLR", reg.pat = NULL){
     }
     for (i in 1:length(seq)){
       if (motif == "RxLR"){
-        reg.pat <- "^\\w{12,60}r\\wlr\\w{6,10}eer"
+        reg.pat <- "^\\w{10,40}\\w{1,96}R\\wLR\\w{1,40}eer"
       } else if (motif == "CRN"){
         reg.pat <- "^\\w{1,90}LFLAK\\w+"
       } else if (motif == "custom"){

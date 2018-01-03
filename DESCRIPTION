@@ -1,7 +1,8 @@
 Package: effectR
 Title: EffectR: R Package to Call Oomycete Effectors
-Version: 0.0.0.9000
-Authors@R: person("Javier", "Tabima", email = "tabimaj@oregonstate.edu", role = c("aut", "cre"))
+Version: 1.0.0
+Authors@R: c(person("Javier", "Tabima", email = "tabimaj@oregonstate.edu", role = c("aut", "cre")),person(c("Niklaus", "J."), "Grunwald", role = "ths", email =
+              "grunwaln@science.oregonstate.edu"))
 Description: The `effectR` package is an R package designed to call oomycete RxLR and CRN effectors by searching for the motifs of interest using regular expression searches and hidden markov models (HMM). 
 Depends: 
 	R (>= 3.4.0)

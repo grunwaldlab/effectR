@@ -33,36 +33,35 @@ effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
   }
   sequences <- lapply(consensus.seq, function (x) paste(unlist(x),collapse = ""))
   if (motif == "RxLR"){
-    rxlr.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) length(x)))
+    rxlr.num <- as.numeric(gsub(pattern = " ", replacement = "",unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) length(x)))))
     rxlr.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
-    eer.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ED][ED][KR]", perl = T,ignore.case = T))), function (x) length(x)))
-    eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ED][ED][KR]", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+    eer.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="eer", perl = T,ignore.case = T))), function (x) length(x)))))
+    eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="eer", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
     motifs <- data.frame(seqinr::getName(consensus.seq),rxlr.num,rxlr.motif,eer.num,eer.motif, stringsAsFactors = F)
   } else if (motif == "CRN") {
-    lflak.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="lflak", perl = T,ignore.case = T))), function (x) length(x)))
+    lflak.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="lflak", perl = T,ignore.case = T))), function (x) length(x)))))
     lflak.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="lflak", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
-    hvlv.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="hvlv", perl = T,ignore.case = T))), function (x) length(x)))
+    hvlv.num <- as.numeric(gsub(pattern = " ", replacement = "",unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="hvlv", perl = T,ignore.case = T))), function (x) length(x)))))
     hvlv.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="hvlv", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
     motifs <- data.frame(seqinr::getName(consensus.seq),lflak.num,lflak.motif,hvlv.num,hvlv.motif, stringsAsFactors = F)
   } else if (motif == "custom"){
     if (is.null(reg.pat)){
       stop("No custom REGEX pattern found.\n The 'custom' option requires a mandatory REGEX pattern")
     } else {
-      custom.num <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern=reg.pat, perl = T,ignore.case = T))), function (x) length(x)))
+      custom.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern=reg.pat, perl = T,ignore.case = T))), function (x) length(x)))))
       custom.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern=reg.pat, perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
       motifs <- data.frame(seqinr::getName(consensus.seq),custom.num,custom.motif, stringsAsFactors = F)
     }
   }
   motifs[motifs == -1] <- NA
-  motifs <- data.frame(apply(motifs, 2, as.character), stringsAsFactors = F)
   if (motif %in% c("RxLR","CRN")){
     motifs[,2][is.na(motifs[,3])] <- 0
     motifs[,4][is.na(motifs[,5])] <- 0
     motifs <- motifs[order(motifs[,2],motifs[,4],decreasing = T),]
     motifs$summary <- "No MOTIFS"
     motifs$summary[motifs[,2] > 0 & motifs[,4] > 0] <- "Complete"
-    motifs$summary[motifs[,2] != 0 & motifs[,4] == 0] <- if (motif == "RxLR"){                                      c("Only RxLR motif")} else if (motif == "CRN"){("Only LFLAK motif")}
-    motifs$summary[motifs[,2] == 0 & motifs[,4] != 0] <- if (motif == "RxLR"){                                      c("Only EER motif")} else if (motif == "CRN"){("Only HVLV motif")}
+    motifs$summary[motifs[,2] != 0 & motifs[,4] == 0] <- if (motif == "RxLR"){c("Only RxLR motif")} else if (motif == "CRN"){("Only LFLAK motif")}
+    motifs$summary[motifs[,2] == 0 & motifs[,4] != 0] <- if (motif == "RxLR"){c("Only EER motif")} else if (motif == "CRN"){("Only HVLV motif")}
     if (motif == "RxLR"){
       colnames(motifs) <- c("Sequence ID","RxLR number","RxLR position","EER number","EER position","MOTIF")
     } else if (motif == "CRN") {

@@ -13,19 +13,6 @@ options(shiny.maxRequestSize=70*4024^2)
 `%then%` <- shiny:::`%OR%`
 jscode <- "shinyjs.refresh = function() { history.go(0); }"
 
-# All variable names
-original.seq <- c("AA.fasta")
-file.name <- c("REGEX.fasta")
-mafft.out.name <- c("MAFFT.fasta")
-hmmbuild.out <- c("hmmbuild.hmm")
-hmmsearch.out <- c("hmmsearch.txt")
-mafft.path <- mafft.path.shiny
-hmm.path <- hmm.path.shiny
-original.dir <- getwd()
-
-# TMP dir
-tmp.dir <- tempdir()
-setwd(tmp.dir)
 
 ### Additional scripts
 
@@ -90,6 +77,7 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
 }
 
 
+
 # Converts FASTA to STOCKHOLM
 fasta_to_stockholm <- function(fasta.file){
   stock.name <- gsub(fasta.file, pattern = ".fasta", replacement = ".stockholm"
@@ -105,9 +93,28 @@ fasta_to_stockholm <- function(fasta.file){
   writeLines(c("# STOCKHOLM 1.0", seq.final,"//"), con = stock.name, sep = "\n")
 }
 
+mafft.path <- dirname(get_mafft_path())
+hmm.path <- dirname(get_hmmer_path("hmmsearch"))
+mafft.path.shiny <- mafft.path
+hmm.path.shiny <- hmm.path
 
-##### SHINY APP START #######
 
+# All variable names
+original.seq <- c("AA.fasta")
+file.name <- c("REGEX.fasta")
+mafft.out.name <- c("MAFFT.fasta")
+hmmbuild.out <- c("hmmbuild.hmm")
+hmmsearch.out <- c("hmmsearch.txt")
+mafft.path <- mafft.path.shiny
+hmm.path <- hmm.path.shiny
+original.dir <- getwd()
+
+# TMP dir
+tmp.dir <- tempdir()
+setwd(tmp.dir)
+##
+
+##### SHINY APP START #####
 shinyServer(function(input, output, session) {
 
   # File read in
