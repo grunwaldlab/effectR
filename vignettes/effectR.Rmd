@@ -232,7 +232,7 @@ The `summary.list$consensus.sequences` has all 27 RxLR candidate genes found in 
 ## Exporting the non-redundant effector candidates
 
 To export the non-redundant effector candidates that resulted from the `hmm.search` or `regex.search` functions, we use the `write.fasta` function of the `seqinr` package. 
-We recomend the users to read the documentation of the [`seqinr`](https://CRAN.R-project.org/package=seqinr/seqinr.pdf) package
+We recomend the users to read the documentation of the [`seqinr`](https://cran.r-project.org/package=seqinr) package
 Since the objects that result from the `hmm.search` or `regex.search` function are of the `SeqFastadna` class, we can use any of the function of the `seqinr` package that use this class as well. 
 
 To save the results from our example file, we would use the following command:
