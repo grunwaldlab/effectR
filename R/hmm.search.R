@@ -45,6 +45,10 @@ hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads 
   # TMP dir
   tmp.dir <- tempdir()
   setwd(tmp.dir)
+  on.exit({
+    unlink(file.path(tmp.dir, "*"), recursive = TRUE)
+    setwd(original.dir)
+  })
 
   # MAFFT alignment
   cat("Starting MAFFT alignment.\n")
@@ -137,7 +141,6 @@ hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads 
   cat(paste0("Total of sequences found in HMM: ",  length(total.seq[[2]]), "\n"))
   cat(paste0("Total of redundant hits: ", sum(duplicated(unlist(lapply(total.seq[c(1,2)], function (x) seqinr::getName(x))))),"\n"))
   cat(paste0("Number of effector candidates: ",length(unique(unlist(lapply(total.seq[c(1,2)], function (x) seqinr::getName(x)))))))
-  unlink(file.path(tmp.dir,"*"), recursive = T)
-  setwd(original.dir)
+
   return(total.seq)
 }

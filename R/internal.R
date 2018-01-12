@@ -16,12 +16,12 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
   if (is.null(mafft.path)) {
     path <- unname(Sys.which("mafft"))
   } else if (endsWith(mafft.path, "mafft")) {
-    path <- mafft.path
+    path <- path.expand(mafft.path)
   } else if (Sys.info()[['sysname']] %in% "Windows") {
-    path <- file.path(mafft.path,"mafft.bat")
+    path <- file.path(path.expand(mafft.path),"mafft.bat")
   }  else {
     # add on executable to path if not already present
-    path <- file.path(mafft.path, "mafft")
+    path <- file.path(path.expand(mafft.path), "mafft")
   }
 
 
@@ -59,7 +59,7 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
   if (is.null(hmmer.path)) {
     path <- unname(Sys.which(command))
   } else {
-    path <- file.path(hmmer.path, command)
+    path <- file.path(path.expand(hmmer.path), command)
   }
 
   # Print progress
