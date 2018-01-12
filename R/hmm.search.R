@@ -45,6 +45,9 @@ hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads 
   # TMP dir
   tmp.dir <- tempdir()
   setwd(tmp.dir)
+  on.exit({
+    setwd(original.dir)
+  })
 
   # MAFFT alignment
   cat("Starting MAFFT alignment.\n")
