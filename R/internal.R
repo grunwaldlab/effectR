@@ -4,7 +4,7 @@
 #'
 #' @param path Where to look for MAFFT. By default it will look on the search
 #'   path.
-#' @param error If \code{TRUE}, throw an error if mafft is not installed.
+#' @param error If \code{TRUE}, throw an error if MAFFT is not installed.
 #' @param verbose If \code{TRUE}, print progress reports.
 #'
 #' @return TRUE/FALSE
@@ -25,7 +25,7 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
   }
 
 
-  # Check if mafft is installed
+  # Check if MAFFT is installed
   is_installed <- file.exists(path) == T
   if (! is_installed && error) {
     if (is.null(mafft.path)) {
@@ -46,7 +46,7 @@ get_mafft_path <- function(mafft.path = NULL, error = TRUE,
 #' @param command Which command to get the path for. For example "hmmsearch".
 #' @param path Where to look for HMMER. By default it will look on the search
 #'   path.
-#' @param error If \code{TRUE}, throw an error if mafft is not installed.
+#' @param error If \code{TRUE}, throw an error if HMMER is not installed.
 #' @param verbose If \code{TRUE}, print progress reports.
 #'
 #' @return TRUE/FALSE
@@ -88,7 +88,7 @@ get_hmmer_path <- function(command, hmmer.path = NULL, error = TRUE,
 #' The HMMER binary version for windows does not recognize FASTA files to build the
 #' hmm profile. This function creates a STOCKHOLM file readable by HMMER 3.0
 #'
-#' @param fasta.file fasta object to be converted
+#' @param fasta.file FASTA object to be converted
 #'
 #' @return TRUE/FALSE
 #'
