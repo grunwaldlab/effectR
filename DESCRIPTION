@@ -10,8 +10,6 @@ Imports:
     seqinr (>= 3.3.6),
     ggplot2 (>= 2.2.1),
     shiny,
-    shinyjs,
-    V8,
     reshape2,
     utils,
     viridis
