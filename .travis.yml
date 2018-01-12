@@ -1,7 +1,6 @@
 language: r
 r:
     - release
-    - devel
 
 sudo: false
 cran: http://cran.at.r-project.org
@@ -25,7 +24,7 @@ before_install:
     #- tar -xzvf hmmer-3.1b2-linux-intel-x86_64.tar.gz
     #- pushd hmmer-3.1b2-linux-intel-x86_64 && ./configure && make && sudo make install
     - Rscript -e 'update.packages(ask = FALSE)'
-    
+
 r_packages:
 # - covr
 
