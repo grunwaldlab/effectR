@@ -1,5 +1,10 @@
-# effectR
-## An R package to call oomycete effectors
+# effectR: An R package to call cytoplasmic effectors
+
+***
+[![Build Status](https://travis-ci.com/Tabima/effectR.svg?token=9dgmZbkD4jn55E4FpK6z&branch=master)](https://travis-ci.com/Tabima/effectR)
+***
+
+# What is *effectR*
 
 The `effectR` package is an R package designed to call oomycete RxLR and CRN effectors by searching for the motifs of interest using regular expression searches and hidden markov models (HMM). 
 
