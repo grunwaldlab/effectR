@@ -22,7 +22,88 @@ In addition, `effectR` reads and returns the HMM profile to the user and allows 
 - External software 
   - [`MAFFT`](mafft.cbrc.jp/alignment/software/)
   - [`HMMER`](http://hmmer.org/)
-  
+ 
+## Installation
+
+### From CRAN
+
+The latest version of `effectR` can be installed from CRAN. To install, make sure R is at least version 3.4.0. In the R console type
+
+```
+install.packages("effectR")
+```
+
+### From GitHub
+
+To install `effectR` via GitHub, make sure that the `devtools` package is installed (use `install.packages("devtools")`). After installing devtools, in the R console type:
+
+```
+devtools::install_github(repo = "grunwaldlab/effectR", build_vignettes = TRUE)
+library("effectR")
+```
+
+### External software (REQUIRED)
+
+The `effectR` package uses `MAFFT` and `HMMER3` to perform the hidden markov model seach across the results from the REGEX step. These two packages should be installed before running any of the `effectR` functions.
+
+### Downloading and installing MAFFT
+
+MAFFT is a multiple sequence alignment program that uses Fourier-transform algorithms to align multiple sequences. We recommend downloading and installing MAFFT by following the instructions and steps in the [MAFFT installation](http://mafft.cbrc.jp/alignment/software/) web site. 
+
+#### Linux/OS X Users
+
+Make sure that you remember the directory in which `MAFFT` is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:
+
+```bash
+which mafft
+```
+
+```
+/usr/local/bin/mafft
+```
+For more information about MAFFT go to the MAFFT website: http://mafft.cbrc.jp/
+
+#### Windows Users
+
+MAFFT comes in two main distributions for windows:
+
+- [A version that requires a UNIX-like interface called Cygwin](http://mafft.cbrc.jp/alignment/software/windows_cygwin.html)
+- [An "all-in-one" version"](http://mafft.cbrc.jp/alignment/software/windows_without_cygwin.html)
+
+Please, download and install the **all-in-one** version.
+We recommend that you download and save MAFFT in your Desktop, as it will make yyour path easily accesible.
+
+### Downloading and installing HMMER
+
+HMMER is used for searching sequence databases for sequence homologs. It uses hidden Markov models (profile HMMs) to search for sequences with hits to similar patterns than the profile. We use three main HMMER tools: 
+
+  - `hmmbuild` to create the HMM database from the sequences ontained in the REGEX step of `effectR`
+  - `hmmpress` converts the HMM database into a format usable by other `HMMER` programs
+  - `hmmsearch` to excecute the HMM search in our sequence queries basde on the HMM profile
+
+The `effectR` package requires all of these tools. A correct `HMMER` installation will install all three programs.
+
+#### Linux/OS X users 
+
+We recommend downloading and installing HMMER by following the instructions and steps in the [HMMER installation](eddylab.org/software/hmmer3/3.1b2/Userguide.pdf) web site. Make sure that you remember the directory in which `HMMER` is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:
+
+```bash
+which hmmbuild
+which hmmpress
+which hmmsearch
+```
+
+```
+/usr/local/bin/hmmbuild
+/usr/local/bin/hmmpress
+/usr/local/bin/hmmsearch
+```
+
+For more information about HMMER go to the HMMER website: http://hmmer.org/
+
+#### Windows users
+
+To use the `effectR` package in Windows, the user **must** download the Windows binaries of [HMMER](http://hmmer.org/binaries/hmmer3.0_windows.zip). `effectR` will not work with any other version of HMMER.  
 ## Data input
 
 The `effectR` package is designed to work with amino acid sequences in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format) representing the six-frame translation of every open reading frame (ORF) of an oomycete genome. 
