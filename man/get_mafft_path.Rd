@@ -7,7 +7,7 @@
 get_mafft_path(mafft.path = NULL, error = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{error}{If \code{TRUE}, throw an error if mafft is not installed.}
+\item{error}{If \code{TRUE}, throw an error if MAFFT is not installed.}
 
 \item{verbose}{If \code{TRUE}, print progress reports.}
 

@@ -9,7 +9,7 @@ get_hmmer_path(command, hmmer.path = NULL, error = TRUE, verbose = FALSE)
 \arguments{
 \item{command}{Which command to get the path for. For example "hmmsearch".}
 
-\item{error}{If \code{TRUE}, throw an error if mafft is not installed.}
+\item{error}{If \code{TRUE}, throw an error if HMMER is not installed.}
 
 \item{verbose}{If \code{TRUE}, print progress reports.}
 

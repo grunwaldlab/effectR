@@ -7,7 +7,7 @@
 fasta_to_stockholm(fasta.file)
 }
 \arguments{
-\item{fasta.file}{fasta object to be converted}
+\item{fasta.file}{FASTA object to be converted}
 }
 \value{
 TRUE/FALSE

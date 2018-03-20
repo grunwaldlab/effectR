@@ -2,7 +2,9 @@
 #'
 #' This function uses searches a list of \code{SeqFastadna} objects for sequences with RxLR or CRN motifs.
 #' @param sequence A list of \code{SeqFastadna} objects from \code{seqinr} \code{\link{read.fasta}}. The \code{SeqFastadna} object must be comprised by amino acid sequences, not DNA sequences
-#' @param motif A character string indicating the motif to be searched. Motifs for two cytoplasmic effectors are added to the function: \code{RxLR} or \code{CRN} effectors. Each of these motifs are associated with a by-default REGEX (\code{reg.pat}). A third option, \code{custom}, allows for the search of custom motifs. The \code{custom} option requires the specification of the motif REGEX pattern in the \code{reg.pat} option, in a \code{\link{regex}} format. Default is RxLR
+#' @param motif A character string indicating the motif to be searched. Motifs for two cytoplasmic effectors are added to the function: \code{RxLR} or \code{CRN} effectors. Each of these motifs are associated with a by-default REGEX (\code{reg.pat}).
+#'
+#' A third option, \code{custom}, allows for the search of custom motifs. The \code{custom} option requires the specification of the motif REGEX pattern in the \code{reg.pat} option, in a \code{\link{regex}} format. Default is RxLR
 #' @param reg.pat A character string indicating the REGEX pattern for the \code{custom} motif. The specification of the REGEX pattern in must be in \code{\link{regex}} format. Required for \code{custom} option of \code{motif}
 #' @keywords regex effector
 #' @export

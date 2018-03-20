@@ -27,7 +27,7 @@ A list of three elements: REGEX candidate effectors, HMM candidate effectors, an
 This function uses MAFFT and HMMER to search for sequences with RxLR or CRN motifs using hidden markov models.
 }
 \details{
-\code{hmm.search} uses the results from \code{\link{regex.search}} to search for motifs of interest using hidden markov models after aligning the sequences with MAFFT.
+\code{hmm.search} uses the results from \code{\link{regex.search}} to search for motifs of interest using Hidden Markov Models after aligning the sequences with MAFFT.
 After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.
 }
 \note{

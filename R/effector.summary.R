@@ -72,7 +72,7 @@ effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
     motifs <- motifs[order(motifs[,2],decreasing = T),]
     motifs$summary <- "No MOTIFS"
     motifs$summary[motifs[,2] > 0] <- "Custom motif"
-    colnames(motifs) <- c("Sequence ID","REGEX number","REGEX position","MOTIF")
+    colnames(motifs) <- c("Sequence ID","Motif number","Motif position","MOTIF")
   }
   motif.out$motif.table <- motifs
   return(motif.out)
