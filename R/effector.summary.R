@@ -74,6 +74,7 @@ effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
     motifs$summary[motifs[,2] > 0] <- "Custom motif"
     colnames(motifs) <- c("Sequence ID","Motif number","Motif position","MOTIF")
   }
+  motifs <- data.frame(motifs, length = unlist(lapply(consensus.seq, length)))
   motif.out$motif.table <- motifs
   return(motif.out)
 }
