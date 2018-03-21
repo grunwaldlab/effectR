@@ -223,9 +223,8 @@ The results illustrate that 19 out of the 20 candidate proteins have a predicted
 
 Any user can add the motif of interest into the effectR package by adding a simple line of code within the `regex.search` function. We will illustrate this feature by adding the PAAR motif search as part of the `regex.search` function:
 
-# The regex.search function
-
 ```
+# The regex.search function
 regex.search <- function(sequence, motif = "RxLR", reg.pat = NULL){
  if (unique(unlist(lapply(sequence, class))) != "SeqFastadna") {
     stop("The object is not a list of sequences read by seqinr.")
