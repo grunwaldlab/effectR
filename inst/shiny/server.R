@@ -156,7 +156,7 @@ shinyServer(function(input, output, session) {
       regex <- list()
       for (i in 1:length(seq)){
         if (input$motif_sel == "RxLR"){
-          regex[[i]] <- unlist(gregexpr(seq[[i]], pattern="^\\w{12,60}r\\wlr\\w{6,10}eer", perl = T,ignore.case = T))
+          regex[[i]] <- unlist(gregexpr(seq[[i]], pattern="^\\w{10,40}\\w{1,96}R\\wLR\\w{1,40}eer", perl = T,ignore.case = T))
         } else if (input$motif_sel == "CRN"){
           regex[[i]] <- unlist(gregexpr(seq[[i]], pattern="^\\w{1,90}LFLAK\\w+", perl = T,ignore.case = T))
         }
@@ -243,9 +243,11 @@ shinyServer(function(input, output, session) {
         Sys.sleep(0.2)
         if (Sys.info()[['sysname']] %in% "Windows"){
           hmmpress_command <- c(get_hmmer_path("hmmpress.exe", hmm.path),
+                                "-f",
                                 hmmbuild.out)
         } else {
           hmmpress_command <- c(get_hmmer_path("hmmpress", hmm.path),
+                                "-f",
                                 hmmbuild.out)
         }
       system2(hmmpress_command)

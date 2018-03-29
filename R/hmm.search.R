@@ -97,9 +97,11 @@ hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads 
   ## HMM Press
   if (Sys.info()[['sysname']] %in% "Windows"){
     hmmpress_command <- c(get_hmmer_path("hmmpress.exe", hmm.path),
-                        hmmbuild.out)
+                          "-f",
+                          hmmbuild.out)
   } else {
     hmmpress_command <- c(get_hmmer_path("hmmpress", hmm.path),
+                          "-f",
                           hmmbuild.out)
   }
   system2(hmmpress_command)
