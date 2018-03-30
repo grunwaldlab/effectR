@@ -43,6 +43,7 @@ effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
     lflak.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="lflak", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
     hvlv.num <- as.numeric(gsub(pattern = " ", replacement = "",unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="hvlv", perl = T,ignore.case = T))), function (x) length(x)))))
     hvlv.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="hvlv", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+    seq.length <-
     motifs <- data.frame(seqinr::getName(consensus.seq),lflak.num,lflak.motif,hvlv.num,hvlv.motif, stringsAsFactors = F)
   } else if (motif == "custom"){
     if (is.null(reg.pat)){
@@ -74,7 +75,8 @@ effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
     motifs$summary[motifs[,2] > 0] <- "Custom motif"
     colnames(motifs) <- c("Sequence ID","Motif number","Motif position","MOTIF")
   }
-  motifs <- data.frame(motifs, length = unlist(lapply(consensus.seq, length)))
+  motifs <- data.frame(motifs, length = unlist(lapply(motifs[,1], function (x) length(unlist(consensus.seq[seqinr::getName(consensus.seq) %in% x])))))
+  rownames(motifs) <- NULL
   motif.out$motif.table <- motifs
   return(motif.out)
 }

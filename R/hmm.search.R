@@ -111,15 +111,15 @@ hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads 
   cat("\nStarting HMM searches\n")
   if (Sys.info()[['sysname']] %in% "Windows"){
     hmmsearch_command <- c(get_hmmer_path("hmmsearch.exe", hmm.path),
-                           "-T", "0",
                            "--seed", seed,
+                           "-T", "0",
                            "--tblout", hmmsearch.out,
                            hmmbuild.out,
                            original.seq)
     } else {
     hmmsearch_command <- c(get_hmmer_path("hmmsearch", hmm.path),
-                         "-T", "0",
                          "--seed", seed,
+                         "-T", "0",
                          "--tblout", hmmsearch.out,
                          hmmbuild.out,
                          original.seq)
