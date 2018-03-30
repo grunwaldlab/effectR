@@ -230,13 +230,13 @@ shinyServer(function(input, output, session) {
           stock.name <- gsub(mafft.out.name, pattern = ".fasta", replacement = ".stockholm"
           )
           hmmbuild_command <- c(get_hmmer_path("hmmbuild.exe", hmm.path),
-                                "--seed 12345",
+                                "--seed", input$seed,
                                 "--amino",
                                 hmmbuild.out,
                                 stock.name)
         } else {
           hmmbuild_command <- c(get_hmmer_path("hmmbuild", hmm.path),
-                                "--seed 12345",
+                                "--seed",input$seed,
                                 "--amino",
                                 hmmbuild.out,
                                 mafft.out.name)
@@ -269,14 +269,14 @@ shinyServer(function(input, output, session) {
         if (Sys.info()[['sysname']] %in% "Windows"){
           hmmsearch_command <- c(get_hmmer_path("hmmsearch.exe", hmm.path),
                                  "-T", "0",
-                                 "--seed 12345",
+                                 "--seed", input$seed,
                                  "--tblout", hmmsearch.out,
                                  hmmbuild.out,
                                  original.seq)
         } else {
           hmmsearch_command <- c(get_hmmer_path("hmmsearch", hmm.path),
                                  "-T", "0",
-                                 "--seed 12345",
+                                 "--seed", input$seed,
                                  "--tblout", hmmsearch.out,
                                  hmmbuild.out,
                                  original.seq)

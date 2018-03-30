@@ -97,6 +97,8 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
       h2("Step 2"),
       h3("HMM search"),
       p("Step 2 aligns the candidate genes obtained in Step 1 to create a Hmmer search to identify additional potential effectors."),
+      p(),
+      textInput("seed", "Random seed number. (This will affect the number of predicted proteins by HMMER. Use the same seed for reproducible results).",value = '12345'),
       actionButton("do", "Align and do HMM search", icon("paper-plane"), style="color: #fff; background-color: #61c66d; border-color: #21a831"),
       p(),
       verbatimTextOutput('mafft'),
