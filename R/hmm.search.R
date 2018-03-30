@@ -24,7 +24,7 @@
 #' After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.
 #' @note
 #' If MAFFT/HMMER are not the program search path, the user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
-hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads = 2, hmm.path = NULL, seed = sample(1:10000, 1)){
+hmm.search <-  function(original.seq, regex.seq, mafft.path = NULL, num.threads = 2, hmm.path = NULL, seed = 12345){
   set.seed(seed)
   sequences <- regex.seq
   if (unique(unlist(lapply(sequences, class))) != "SeqFastadna") {
