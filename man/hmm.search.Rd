@@ -5,7 +5,7 @@
 \title{Searching for motifs using HMM searches}
 \usage{
 hmm.search(original.seq, regex.seq, mafft.path = NULL, num.threads = 2,
-  hmm.path = NULL, seed = sample(1:10000, 1))
+  hmm.path = NULL, seed = 12345)
 }
 \arguments{
 \item{original.seq}{The path for the original six-frame translation FASTA file}
