@@ -27,10 +27,10 @@ shinyUI(fluidPage(
                  "))
       ),
 
-  titlePanel("The de novo Effector Pipeline online server: RxLR Module"),
+  titlePanel("The effectR package graphical user interface."),
     mainPanel(
       tags$hr(),
-      h4("The RxLR de novo effector pipeline calls effectors for oomycete genomes in a fast and reproducible way."),
+      h4("effectR predicts effectors for genomes in a fast and reproducible way."),
       tags$hr(),
       singleton(tags$body(HTML(
         '
@@ -65,7 +65,7 @@ To obtain a better assesment of the effectors in your genome please use a <b>6-f
       tags$hr(),
       h2("Step 1"),
       h3("Regular expression search"),
-      p("Step 1 uses a regular expression search to identify the sequences with the motifs of interest (RxLR+EER as based on Haas at al., 2009)."),
+      p("Step 1 uses a regular expression search to identify the sequences with the motifs of interest."),
       p(),
       selectInput("motif_sel", label = h3("Select motif to search"),
                   choices = list("RxLR" = "RxLR", "CRN" = "CRN"), selected = "RxLR"),
