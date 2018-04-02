@@ -24,6 +24,9 @@
 #'}
 effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
   motif.out <- list()
+  if (length(hmm.result) == 4){
+    hmm.result <- hmm.result[names(hmm.result) %in% c("REGEX","HMM","HMM_Table")]
+  }
   if (length(hmm.result) == 3) {
     summ.dataf <- c(hmm.result[[1]],hmm.result[[2]])
     consensus.seq <- summ.dataf[!duplicated(seqinr::getName(summ.dataf))]
