@@ -4,21 +4,26 @@
 \alias{hmm.search}
 \title{Searching for motifs using HMM searches}
 \usage{
-hmm.search(original.seq, regex.seq, mafft.path = NULL, num.threads = 2,
+hmm.search(original.seq, regex.seq, alignment.file = NULL,
+  save.alignment = FALSE, mafft.path = NULL, num.threads = 2,
   hmm.path = NULL, seed = 12345)
 }
 \arguments{
-\item{original.seq}{The path for the original six-frame translation FASTA file}
+\item{original.seq}{The absolute path for the original six-frame translation FASTA file}
 
 \item{regex.seq}{A list of \code{SeqFastadna} objects resulting from \code{\link{regex.search}}. The HMM profile will be constructed using these sequences}
 
-\item{mafft.path}{Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the program search path.}
+\item{alignment.file}{(Optional) The absolute path for an alignment file of the sequences to build the hmmer profile from. It's recommended that the alignment file cointains the same sequences than the `regex.seq` files. If the user provides the absolute path, *effectR* won't use MAFFT to align the sequences and will use the alignment for the HMMER searches. If no alignment file is provided, *effectR* will use MAFFT to align the sequences from `regex.seq` and run HMMER.}
 
-\item{num.threads}{Number of threads to be used by MAFFT}
+\item{save.alignment}{(Optional) Save the alignment in the returning object. The MAFFT alignment will be saved as the first element of the returned object.}
 
-\item{hmm.path}{Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the program search path.}
+\item{mafft.path}{(Optional) Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the program search path.}
 
-\item{seed}{The seed to used with HMMER commands. Set this to get the same output each time}
+\item{num.threads}{(Optional) Number of threads to be used by MAFFT}
+
+\item{hmm.path}{(Optional) Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the program search path.}
+
+\item{seed}{(Optional) The seed to used with HMMER commands. Set this to get the same output each time}
 }
 \value{
 A list of three elements: REGEX candidate effectors, HMM candidate effectors, and HMM results table.
@@ -40,7 +45,19 @@ If MAFFT/HMMER are not the program search path, the user has to specify the path
 fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 ORF <- seqinr::read.fasta(fasta.file)
 REGEX <- regex.search(ORF, motif="RxLR")
-candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX)
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX,
+ alignment.file=NULL, save.alignment=T)
+
+# To save the alignment:
+library(seqinr)
+write.fasta(sequences = getSequence(candidate.rxlr$Alignment),
+ names = getName(candidate.rxlr$Alignment),
+ file.out = "Alin_infestans.fasta", nbchar = 10000)
+
+# To use an alignment file
+ALIN <- system.file("extdata", "Alin_infestans.fasta", package = "effectR")
+candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX,
+ alignment.file = ALIN)
 }
 }
 \keyword{effector}

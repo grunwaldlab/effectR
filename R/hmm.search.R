@@ -19,15 +19,19 @@
 #' fasta.file <- system.file("extdata", "test_infestans.fasta", package = "effectR")
 #' ORF <- seqinr::read.fasta(fasta.file)
 #' REGEX <- regex.search(ORF, motif="RxLR")
-#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX, alignment.file=NULL, save.alignment=T)
+#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX,
+#'  alignment.file=NULL, save.alignment=T)
 #'
 #' # To save the alignment:
 #' library(seqinr)
-#' write.fasta(sequences = getSequence(candidate.rxlr$Alignment), names = getName(candidate.rxlr$Alignment), file.out = "Alin_infestans.fasta", nbchar = 10000)
+#' write.fasta(sequences = getSequence(candidate.rxlr$Alignment),
+#'  names = getName(candidate.rxlr$Alignment),
+#'  file.out = "Alin_infestans.fasta", nbchar = 10000)
 #'
 #' # To use an alignment file
 #' ALIN <- system.file("extdata", "Alin_infestans.fasta", package = "effectR")
-#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX, alignment.file = ALIN)
+#' candidate.rxlr <- hmm.search(original.seq = fasta.file, regex.seq = REGEX,
+#'  alignment.file = ALIN)
 #' }
 #' @details
 #' \code{hmm.search} uses the results from \code{\link{regex.search}} to search for motifs of interest using Hidden Markov Models after aligning the sequences with MAFFT.

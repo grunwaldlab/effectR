@@ -130,11 +130,17 @@ We have created the `hmm.search` function in order to perfomr this search.
 The `hmm.search` function requires a local installation of `MAFFT` and `HMMER` in order to perform the searches. The *absolute paths* of the binaries must be specified in the `mafft.path` and `hmmer.path` options of the `hmm.search` function.
 In addition, the `hmm.function` requires the path of the original FASTA file containing the translated ORF's in the `original.seq` parameter of the function. `hmm.search` will use this file as a query in the `hmmsearch` software from HMMER, and search for all sequences with hits against the HMM profile created with the REGEX results.
 
-The `hmm.search` object returns a list of 3 elements: 
+A default `hmm.search` object returns a list of 3 elements: 
 
 1. The REGEX sequences used to build the HMM profile in a `SeqFastadna` class
 2. The sequences from the original translated ORF files with hits to the HMM profile in a `SeqFastadna` class
 3. The HMM profile table created by HMMER's `hmmbuild` as a data frame
+
+*NEW FEATURES*:
+- `hmm.search` can use a user-defined alignment file (i.e. A multiple sequence alignment performed in MUSCLE, ClustalW, etc.) and omit the alignment step
+- `hmm.search` allows the user to save the multiple sequence alignment created by MAFFT within the function
+
+More information on these new features is available in the package help (`?hmm.search`) or in the *effectR* vignette
 
 ## Obtaining non-redundant effectors and motif summaries
 
