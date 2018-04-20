@@ -7,6 +7,12 @@
 
 The `effectR` package is an R package designed to call oomycete RxLR and CRN effectors by searching for the motifs of interest using regular expression searches and hidden markov models (HMM). 
 
+# What's new in version 1.0.1?
+
+- User can provide an alignment file for `hmm.search`
+- Users can save the alignments created by `MAFFT` within `effectR`
+- User-defined seeds in `hmm.search` for reproducibility
+
 # Overview
 
 The `effectR` packages searches for the motifs of interest (RxLR-EER motif for RxLR effectors and LFLAK motif for CRN effectors) using a regular expression search (`REGEX`). 
