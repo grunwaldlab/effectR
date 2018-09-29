@@ -4,19 +4,13 @@
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
-
-* This is an update
+There were no ERRORs, WARNINGs or NOTE;s
 
 ## Reverse dependencies
 
-This is a new release, so there are no reverse dependencies.
+There are currently no downstream dependencies for this package
 
 ---
 
-* I have run R CMD check on the NUMBER downstream dependencies.
-  (Summary at ...). 
-  
-* FAILURE SUMMARY
+* This is an update
 
-* All revdep maintainers were notified of the release on RELEASE DATE.
