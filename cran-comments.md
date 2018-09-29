@@ -4,7 +4,7 @@
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTE;s
+There were no ERRORs, WARNINGs or NOTE's
 
 ## Reverse dependencies
 
