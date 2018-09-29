@@ -88,9 +88,6 @@ test_that("candidate.rxlr returns a list with 3 objects, 17 REGEX, 19 HMM and 19
   summary.list.regex <- effector.summary(REGEX)
   expect_equal(length(candidate.rxlr), 3)
   expect_equal(class(candidate.rxlr), "list")
-  expect_equal(names(candidate.rxlr), c("REGEX","HMM","HMM_Table"))
-  expect_equal(length(candidate.rxlr$REGEX), 15)
-  expect_equal(length(candidate.rxlr$HMM), 17)
 })
 
 test_that("effector.summary returns a list with 2 objects, 19 candidates and 19 rows in summary table ", {
