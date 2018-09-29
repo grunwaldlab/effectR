@@ -5,7 +5,7 @@ Authors@R: c(person("Javier", "Tabima", email = "tabimaj@oregonstate.edu", role 
               "grunwaln@science.oregonstate.edu"))
 Description: Predicts cytoplasmic effector proteins using genomic data by searching for motifs of interest using regular expression searches and hidden Markov models (HMM) based in Haas et al. (2009) <doi:10.1038/nature08358>. 
 Depends: 
-	R (>= 3.4.0)
+	R (>= 3.5.0)
 Imports:
     seqinr (>= 3.3.6),
     ggplot2 (>= 2.2.1),
