@@ -4,20 +4,17 @@ Version: 1.0.2
 Authors@R: c(person("Javier", "Tabima", email = "tabimaj@oregonstate.edu", role = c("aut", "cre")),person(c("Niklaus", "J."), "Grunwald", role = "ths", email =
               "grunwaln@science.oregonstate.edu"))
 Description: Predicts cytoplasmic effector proteins using genomic data by searching for motifs of interest using regular expression searches and hidden Markov models (HMM) based in Haas et al. (2009) <doi:10.1038/nature08358>. 
-Depends: 
-	R (>= 3.4.0)
-Imports:
-    seqinr (>= 3.3.6),
-    ggplot2 (>= 2.2.1),
-    shiny,
-    reshape2,
-    utils,
-    viridis
+Depends: R (>= 3.4.0)
+Imports: seqinr (>= 3.3.6), ggplot2 (>= 2.2.1), shiny, reshape2, utils,
+        viridis
 License: GPL-2 | GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
-Suggests: knitr,
-    rmarkdown,
-    testthat
+Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2018-09-29 00:21:00 UTC; tabimaj
+Author: Javier Tabima [aut, cre],
+  Niklaus J. Grunwald [ths]
+Maintainer: Javier Tabima <tabimaj@oregonstate.edu>

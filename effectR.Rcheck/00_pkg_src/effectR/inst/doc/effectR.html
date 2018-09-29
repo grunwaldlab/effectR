@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Javier F. Tabima" />
+
+<meta name="date" content="2018-09-28" />
+
+<title>effectR: An R package to call oomycete effectors</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">effectR: An R package to call oomycete effectors</h1>
+<h4 class="author"><em>Javier F. Tabima</em></h4>
+<h4 class="date"><em>2018-09-28</em></h4>
+
+
+
+<p>The <code>effectR</code> package is an R package designed to call oomycete RxLR and CRN effectors by searching for the motifs of interest using regular expression searches and hidden markov models (HMM).</p>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>The <code>effectR</code> packages searches for the motifs of interest (RxLR-EER motif for RxLR effectors and LFLAK motif for CRN effectors) using a regular expression search (<code>REGEX</code>). These motifs used by the REGEX <code>effectR</code> search have been reported in the literature (Haas et al., 2009, Stam et al., 2004).</p>
+<p>The <code>effectR</code> package aligns the REGEX search results using <a href="http://mafft.cbrc.jp/alignment/software/"><code>MAFFT</code></a>, and builds a HMM profile based on the multiple sequence alignment result using the <code>hmmbuild</code> program from <a href="http://hmmer.org/"><code>HMMER</code></a>. The HMM profile is used to search across ORF of the genome of interest using the <code>hmmsearch</code> binary from <code>HMMER</code>. The search step will retain sequences with significant hits to the profile of interest. <code>effectR</code> also combines the redundant sequences found in both REGEX and HMM searches into a single dataset that can be easily exported. In addition, <code>effectR</code> reads and returns the HMM profile to the user and allows for the creation of a <a href="https://en.wikipedia.org/wiki/Sequence_logo">MOTIF logo-like plot</a> using <code>ggplot2</code>.</p>
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
+<ul>
+<li>R packages:</li>
+<li><a href="https://cran.r-project.org/package=seqinr"><code>seqinr</code></a></li>
+<li><p><a href="http://ggplot2.org/"><code>ggplot2</code></a></p></li>
+<li>External software</li>
+<li><a href="http://mafft.cbrc.jp/alignment/software/"><code>MAFFT</code></a></li>
+<li><p><a href="http://hmmer.org/"><code>HMMER</code></a></p></li>
+</ul>
+</div>
+<div id="external-software-required" class="section level2">
+<h2>External software (REQUIRED)</h2>
+<p>The <code>effectR</code> package uses <code>MAFFT</code> and <code>HMMER3</code> to perform the hidden markov model seach across the results from the REGEX step. These two packages should be installed before running any of the <code>effectR</code> functions.</p>
+<div id="downloading-and-installing-mafft" class="section level3">
+<h3>Downloading and installing MAFFT</h3>
+<p>MAFFT is a multiple sequence alignment program that uses Fourier-transform algorithms to align multiple sequences. We recommend downloading and installing MAFFT by following the instructions and steps in the <a href="http://mafft.cbrc.jp/alignment/software/">MAFFT installation</a> web site.</p>
+<div id="linuxos-x-users" class="section level4">
+<h4>Linux/OS X Users</h4>
+<p>Make sure that you remember the directory in which <code>MAFFT</code> is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">which</span> mafft</code></pre></div>
+<pre><code>/usr/local/bin/mafft</code></pre>
+<p>For more information about MAFFT go to the MAFFT website: <a href="http://mafft.cbrc.jp/" class="uri">http://mafft.cbrc.jp/</a></p>
+</div>
+<div id="windows-users" class="section level4">
+<h4>Windows Users</h4>
+<p>MAFFT comes in two main distributions for windows:</p>
+<ul>
+<li><a href="http://mafft.cbrc.jp/alignment/software/windows_cygwin.html">A version that requires a UNIX-like interface called Cygwin</a></li>
+<li><a href="http://mafft.cbrc.jp/alignment/software/windows_without_cygwin.html">An “all-in-one” version“</a></li>
+</ul>
+<p>Please, download and install the <strong>all-in-one</strong> version. We recommend that you download and save MAFFT in your Desktop, as it will make yyour path easily accesible.</p>
+</div>
+</div>
+<div id="downloading-and-installing-hmmer" class="section level3">
+<h3>Downloading and installing HMMER</h3>
+<p>HMMER is used for searching sequence databases for sequence homologs. It uses hidden Markov models (profile HMMs) to search for sequences with hits to similar patterns than the profile. We use three main HMMER tools:</p>
+<ul>
+<li><code>hmmbuild</code> to create the HMM database from the sequences ontained in the REGEX step of <code>effectR</code></li>
+<li><code>hmmpress</code> converts the HMM database into a format usable by other <code>HMMER</code> programs</li>
+<li><code>hmmsearch</code> to excecute the HMM search in our sequence queries basde on the HMM profile</li>
+</ul>
+<p>The <code>effectR</code> package requires all of these tools. A correct <code>HMMER</code> installation will install all three programs.</p>
+<div id="linuxos-x-users-1" class="section level4">
+<h4>Linux/OS X users</h4>
+<p>We recommend downloading and installing HMMER by following the instructions and steps in the <a href="eddylab.org/software/hmmer3/3.1b2/Userguide.pdf">HMMER installation</a> web site. Make sure that you remember the directory in which <code>HMMER</code> is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">which</span> hmmbuild
+<span class="fu">which</span> hmmpress
+<span class="fu">which</span> hmmsearch</code></pre></div>
+<pre><code>/usr/local/bin/hmmbuild
+/usr/local/bin/hmmpress
+/usr/local/bin/hmmsearch</code></pre>
+<p>For more information about HMMER go to the HMMER website: <a href="http://hmmer.org/" class="uri">http://hmmer.org/</a></p>
+</div>
+<div id="windows-users-1" class="section level4">
+<h4>Windows users</h4>
+<p>To use the <code>effectR</code> package in Windows, the user <strong>must</strong> download the Windows binaries of <a href="http://hmmer.org/binaries/hmmer3.0_windows.zip">HMMER</a>. <code>effectR</code> will not work with any other version of HMMER.</p>
+</div>
+</div>
+</div>
+<div id="data-input" class="section level2">
+<h2>Data input</h2>
+<p>The <code>effectR</code> package is designed to work with amino acid sequences in <a href="https://en.wikipedia.org/wiki/FASTA_format">FASTA format</a> representing the six-frame translation of every open reading frame (ORF) of an oomycete genome. Using the six-frame translation of all ORF’s in a genome is recommended in order to obtain as many effectors as possible from a proteome. To obtain the ORF for a genome, we recommend the use of EMBOSS’ <a href="http://emboss.sourceforge.net/apps/cvs/emboss/apps/getorf.html"><code>getorf</code></a>.</p>
+<p><code>effectR</code> uses a list of sequences of the class <code>SeqFastadna</code> in order to perform the effector searches. The function <code>read.fasta</code> from the <code>seqinr</code> package reads the FASTA amino acid file into R, creating a list of <code>SeqFastadna</code> objects that represent each of the translated ORF’s from the original FASTA file. We will begin our example using a subset of translated ORF’s from the <em>P. infestans</em> genome sequenced by Haas et al., (2009):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(effectR)
+pkg &lt;-<span class="st"> &quot;effectR&quot;</span>
+fasta.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;test_infestans.fasta&quot;</span>, <span class="dt">package =</span> pkg)
+<span class="kw">library</span>(seqinr)
+ORF &lt;-<span class="st"> </span><span class="kw">read.fasta</span>(fasta.file)
+<span class="kw">head</span>(ORF, <span class="dt">n =</span> <span class="dv">2</span>)</code></pre></div>
+<pre><code>## $PITG_23132_PexRD36_RxLR
+##  [1] &quot;m&quot; &quot;r&quot; &quot;a&quot; &quot;n&quot; &quot;v&quot; &quot;i&quot; &quot;v&quot; &quot;v&quot; &quot;a&quot; &quot;l&quot; &quot;a&quot; &quot;l&quot; &quot;y&quot; &quot;i&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot;
+## [18] &quot;n&quot; &quot;v&quot; &quot;t&quot; &quot;l&quot; &quot;a&quot; &quot;a&quot; &quot;c&quot; &quot;a&quot; &quot;k&quot; &quot;s&quot; &quot;r&quot; &quot;h&quot; &quot;l&quot; &quot;r&quot; &quot;v&quot; &quot;n&quot; &quot;g&quot;
+## [35] &quot;k&quot; &quot;d&quot; &quot;a&quot; &quot;l&quot; &quot;w&quot; &quot;n&quot; &quot;y&quot; &quot;d&quot; &quot;t&quot; &quot;s&quot; &quot;g&quot; &quot;g&quot; &quot;i&quot; &quot;n&quot; &quot;s&quot; &quot;i&quot; &quot;v&quot;
+## [52] &quot;a&quot; &quot;d&quot; &quot;d&quot; &quot;e&quot; &quot;e&quot; &quot;r&quot; &quot;v&quot; &quot;v&quot; &quot;s&quot; &quot;f&quot; &quot;s&quot; &quot;g&quot; &quot;i&quot; &quot;k&quot; &quot;r&quot; &quot;w&quot; &quot;l&quot;
+## [69] &quot;k&quot; &quot;e&quot; &quot;l&quot; &quot;f&quot; &quot;k&quot; &quot;n&quot; &quot;w&quot; &quot;s&quot;
+## attr(,&quot;name&quot;)
+## [1] &quot;PITG_23132_PexRD36_RxLR&quot;
+## attr(,&quot;Annot&quot;)
+## [1] &quot;&gt;PITG_23132_PexRD36_RxLR&quot;
+## attr(,&quot;class&quot;)
+## [1] &quot;SeqFastadna&quot;
+## 
+## $PITG_15287_PexRD1_RxLR
+##   [1] &quot;m&quot; &quot;r&quot; &quot;a&quot; &quot;c&quot; &quot;n&quot; &quot;t&quot; &quot;l&quot; &quot;l&quot; &quot;p&quot; &quot;t&quot; &quot;a&quot; &quot;i&quot; &quot;v&quot; &quot;l&quot; &quot;t&quot; &quot;s&quot; &quot;c&quot;
+##  [18] &quot;d&quot; &quot;a&quot; &quot;l&quot; &quot;s&quot; &quot;a&quot; &quot;h&quot; &quot;r&quot; &quot;a&quot; &quot;q&quot; &quot;i&quot; &quot;m&quot; &quot;n&quot; &quot;v&quot; &quot;a&quot; &quot;t&quot; &quot;s&quot; &quot;d&quot;
+##  [35] &quot;l&quot; &quot;i&quot; &quot;s&quot; &quot;p&quot; &quot;i&quot; &quot;e&quot; &quot;s&quot; &quot;t&quot; &quot;v&quot; &quot;q&quot; &quot;d&quot; &quot;d&quot; &quot;n&quot; &quot;y&quot; &quot;d&quot; &quot;r&quot; &quot;q&quot;
+##  [52] &quot;l&quot; &quot;r&quot; &quot;g&quot; &quot;f&quot; &quot;y&quot; &quot;a&quot; &quot;t&quot; &quot;e&quot; &quot;n&quot; &quot;t&quot; &quot;d&quot; &quot;p&quot; &quot;v&quot; &quot;n&quot; &quot;n&quot; &quot;q&quot; &quot;d&quot;
+##  [69] &quot;t&quot; &quot;a&quot; &quot;h&quot; &quot;e&quot; &quot;d&quot; &quot;g&quot; &quot;e&quot; &quot;e&quot; &quot;r&quot; &quot;v&quot; &quot;n&quot; &quot;v&quot; &quot;a&quot; &quot;t&quot; &quot;v&quot; &quot;l&quot; &quot;g&quot;
+##  [86] &quot;k&quot; &quot;g&quot; &quot;d&quot; &quot;e&quot; &quot;a&quot; &quot;w&quot; &quot;d&quot; &quot;d&quot; &quot;a&quot; &quot;l&quot; &quot;m&quot; &quot;r&quot; &quot;l&quot; &quot;a&quot; &quot;y&quot; &quot;q&quot; &quot;h&quot;
+## [103] &quot;w&quot; &quot;f&quot; &quot;d&quot; &quot;g&quot; &quot;g&quot; &quot;k&quot; &quot;t&quot; &quot;s&quot; &quot;d&quot; &quot;g&quot; &quot;m&quot; &quot;r&quot; &quot;l&quot; &quot;i&quot; &quot;m&quot; &quot;d&quot; &quot;l&quot;
+## [120] &quot;p&quot; &quot;a&quot; &quot;k&quot; &quot;g&quot; &quot;e&quot; &quot;a&quot; &quot;l&quot; &quot;r&quot; &quot;h&quot; &quot;p&quot; &quot;n&quot; &quot;w&quot; &quot;g&quot; &quot;k&quot; &quot;y&quot; &quot;i&quot; &quot;k&quot;
+## [137] &quot;y&quot; &quot;l&quot; &quot;e&quot; &quot;f&quot; &quot;v&quot; &quot;k&quot; &quot;e&quot; &quot;k&quot; &quot;k&quot; &quot;k&quot; &quot;e&quot; &quot;a&quot; &quot;a&quot; &quot;d&quot; &quot;a&quot; &quot;a&quot; &quot;a&quot;
+## [154] &quot;v&quot; &quot;a&quot; &quot;a&quot; &quot;l&quot; &quot;k&quot; &quot;r&quot; &quot;r&quot; &quot;r&quot; &quot;t&quot; &quot;y&quot; &quot;r&quot; &quot;g&quot; &quot;w&quot; &quot;y&quot; &quot;v&quot; &quot;d&quot; &quot;g&quot;
+## [171] &quot;k&quot; &quot;t&quot; &quot;e&quot; &quot;k&quot; &quot;d&quot; &quot;v&quot; &quot;r&quot; &quot;k&quot; &quot;i&quot; &quot;f&quot; &quot;g&quot; &quot;l&quot; &quot;p&quot; &quot;a&quot; &quot;t&quot; &quot;g&quot; &quot;k&quot;
+## [188] &quot;a&quot; &quot;k&quot; &quot;n&quot; &quot;h&quot; &quot;p&quot; &quot;n&quot; &quot;w&quot; &quot;a&quot; &quot;d&quot; &quot;f&quot; &quot;q&quot; &quot;e&quot; &quot;y&quot; &quot;l&quot; &quot;n&quot; &quot;v&quot; &quot;v&quot;
+## [205] &quot;r&quot; &quot;e&quot; &quot;y&quot; &quot;s&quot; &quot;k&quot; &quot;v&quot; &quot;v&quot; &quot;f&quot; &quot;k&quot;
+## attr(,&quot;name&quot;)
+## [1] &quot;PITG_15287_PexRD1_RxLR&quot;
+## attr(,&quot;Annot&quot;)
+## [1] &quot;&gt;PITG_15287_PexRD1_RxLR&quot;
+## attr(,&quot;class&quot;)
+## [1] &quot;SeqFastadna&quot;</code></pre>
+<p>We have created a <code>ORF</code> object that includes the list of translated ORF’s from the subset of XX ORF’s from the <em>P. infestans</em> genome. For more information on the <code>SeqFastadna</code> objects please read the <a href="https://cran.r-project.org/package=seqinr"><code>seqinr manual</code></a>.</p>
+</div>
+<div id="regex-search" class="section level2">
+<h2>REGEX search</h2>
+<p>To perform the effector search, <code>effectR</code> searches for the motifs of interest found in RxLR and CRN motifs. We have created the function <code>regex.search</code> to perform the seach of the motif of interest. The function <code>regex.search</code> requires the list of <code>SeqFastadna</code> objects and the gene family of interest. Here we show an example to search for sequences with RxLR-EER motifs from the 27 ORF subset of <em>P. infestans</em>. This ORF example data set contains 17 sequences with RxLR-EER motifs and 27 sequences with the LFLAK motifs found in CRN effectors. We expect to find, then, 17 sequences after using the <code>regex.search</code> function with the <code>motif='RxLR'</code> parameter:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">REGEX &lt;-<span class="st"> </span><span class="kw">regex.search</span>(<span class="dt">sequence =</span> ORF, <span class="dt">motif =</span> <span class="st">&quot;RxLR&quot;</span>)
+<span class="kw">length</span>(REGEX)</code></pre></div>
+<pre><code>## [1] 15</code></pre>
+<p>We observe that the <code>REGEX</code> object has 27 sequences with the RxLR motif. These sequences will be aligned using <code>MAFFT</code>, and used to build a HMM profile to search for similar sequences.</p>
+<p>In addition to the basic functionality of <code>regex.search</code> to obtain both RxLR and CRN candidate genes, we have added the possibility of using a custom regex motif in order to search for non-canonical effectors or other protein motifs from different families of interest. The option <code>motif = &quot;custom&quot;</code> is couple with the <code>reg.pat</code> option, wich allows for the inclusion of any regular expression in the format specified by the <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html"><code>regex</code></a> function in R. For example, if we want to obtain all candidates with a WV motif in the positions 60 to 90 of the aminoacid, we use the following commands:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reg.pat &lt;-<span class="st"> &quot;^</span><span class="ch">\\</span><span class="st">w{50,60}[w,v]&quot;</span>
+REGEX &lt;-<span class="st"> </span><span class="kw">regex.search</span>(<span class="dt">sequence =</span> ORF, <span class="dt">motif =</span> <span class="st">&quot;custom&quot;</span>, <span class="dt">reg.pat =</span> reg.pat)
+<span class="kw">length</span>(REGEX)</code></pre></div>
+<pre><code>## [1] 17</code></pre>
+</div>
+<div id="multiple-sequence-alignment-and-hmmer-search" class="section level2">
+<h2>Multiple sequence alignment and HMMER search</h2>
+<p>To perform the HMM search and obtain all possible effector candidates from a proteome, <code>effectR</code> uses the <code>REGEX</code> results as a template to create a HMM profile and perform a search across the proteome of interest. We have created the <code>hmm.search</code> function in order to perfomr this search. The <code>hmm.search</code> function requires a local installation of <code>MAFFT</code> and <code>HMMER</code> in order to perform the searches. The <em>absolute paths</em> of the binaries must be specified in the <code>mafft.path</code> and <code>hmmer.path</code> options of the <code>hmm.search</code> function.</p>
+<blockquote>
+<p>Note for Windows users: Please use the ABSOLUTE PATH for HMMER and MAFFT or effectR will not work (e.g. <code>mafft.path =&quot;C:/User/Banana/Desktop/mafft/&quot;</code>)</p>
+</blockquote>
+<p>In addition, the <code>hmm.function</code> requires the path of the original FASTA file containing the translated ORF’s in the <code>original.seq</code> parameter of the function. <code>hmm.search</code> will use this file as a query in the <code>hmmsearch</code> software from HMMER, and search for all sequences with hits against the HMM profile created with the REGEX results.</p>
+<p>We will continue or example by performing a <code>hmm.search</code> in our example data set. We will include the original example FASTA file location (stored in the <code>fasta.file</code> object), the location of the <code>MAFFT</code> binary and the location of the HMMER binaries:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">candidate.rxlr &lt;-<span class="st"> </span><span class="kw">hmm.search</span>(<span class="dt">original.seq =</span> fasta.file, <span class="dt">regex.seq =</span> REGEX, <span class="dt">mafft.path =</span> <span class="st">&quot;/usr/local/bin/&quot;</span>, <span class="dt">hmm.path =</span> <span class="st">&quot;/usr/local/bin/&quot;</span>)</code></pre></div>
+<p>The <code>hmm.search</code> function has resulted in 19 effector candidates. As a reminder, we used the <code>REGEX</code> results of an RxLR motif search, so we can consider this <code>hmm.search</code> results as RxLR candidate effectors. To obtain the CRN candidate effectors we should go back to the <code>regex.search</code> step and modify the <code>motif</code> parameter to <code>motif=&quot;CRN</code> and perform the <code>hmm.search</code> again.</p>
+<p>The <code>hmm.search</code> object returns a list of 3 elements:</p>
+<ol style="list-style-type: decimal">
+<li>The REGEX sequences used to build the HMM profile in a <code>SeqFastadna</code> class</li>
+<li>The sequences from the original translated ORF files with hits to the HMM profile in a <code>SeqFastadna</code> class</li>
+<li>The HMM profile table created by HMMER’s <code>hmmbuild</code> as a data frame</li>
+</ol>
+<p>We can access each one of these elements by using the <code>$</code> operator in the object obtained from <code>hmm.search</code>:</p>
+<div id="regex-results" class="section level3">
+<h3>REGEX results</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(candidate.rxlr<span class="op">$</span>REGEX, <span class="dt">n =</span> <span class="dv">2</span>)</code></pre></div>
+</div>
+<div id="hmmer-results" class="section level3">
+<h3>HMMER results</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(candidate.rxlr<span class="op">$</span>HMM, <span class="dt">n =</span> <span class="dv">2</span>)</code></pre></div>
+</div>
+<div id="hmm-profile" class="section level3">
+<h3>HMM profile</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(candidate.rxlr<span class="op">$</span>HMM_Table)</code></pre></div>
+<p>We have included each of these elements to provide the user with the most complete information possible from each of the steps performed until here.</p>
+</div>
+</div>
+<div id="obtaining-non-redundant-effectors-and-motif-summaries" class="section level2">
+<h2>Obtaining non-redundant effectors and motif summaries</h2>
+<p>The user can extract all of the non-redundant sequences and a summary table with the information about the motifs using the <code>effector.summary</code> function. This function uses the results from either <code>hmm.seach</code> or <code>regex.search</code> functions to generate a table that includes the name of the candidate effector sequence, the number of motifs of interest (RxLR-EER or LFLAK-HVLV) per sequence and its location within the sequence. In addition, when the <code>effector.summary</code> function is used in an object that contains the results of <code>hmm.search</code>, the user will obtain a list of the non-reduntant sequences. If the user provides the results from <code>regex.search</code>, the function will return the motif summary table.</p>
+<p>We will use the <code>effector.summary</code> function with our <code>hmm.search</code> results (the <code>candidate.rxlr</code> object):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">summary.list &lt;-<span class="st"> </span><span class="kw">effector.summary</span>(candidate.rxlr)</code></pre></div>
+<div id="motif-table" class="section level3">
+<h3>Motif table</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(summary.list<span class="op">$</span>motif.table)</code></pre></div>
+<p>The motif table has a column called <strong>MOTIF</strong>. This column summarizes the candidate ORF into one of 4 categories:</p>
+<ul>
+<li>Complete: The candidate ORF has both motifs of interest (RxLR + EER or LFLAK + HVLV)</li>
+<li>Only RxLR/Only LFLAK: The candidate ORF only has the translocation domain</li>
+<li>Only EER/HVLV: The candidate ORF only has the second motif of interest</li>
+<li>No motifs: The sequence has a hit with the HMM profile but does not have any motif of interest</li>
+</ul>
+</div>
+<div id="non-redundant-sequences" class="section level3">
+<h3>Non-redundant sequences</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(summary.list<span class="op">$</span>motif.table, <span class="dt">n =</span> <span class="dv">2</span>)
+<span class="kw">length</span>(summary.list<span class="op">$</span>consensus.sequences)</code></pre></div>
+<p>The <code>summary.list$consensus.sequences</code> has all 27 RxLR candidate genes found in our searches.</p>
+</div>
+</div>
+<div id="exporting-the-non-redundant-effector-candidates" class="section level2">
+<h2>Exporting the non-redundant effector candidates</h2>
+<p>To export the non-redundant effector candidates that resulted from the <code>hmm.search</code> or <code>regex.search</code> functions, we use the <code>write.fasta</code> function of the <code>seqinr</code> package. We recomend the users to read the documentation of the <a href="https://cran.r-project.org/package=seqinr"><code>seqinr</code></a> package Since the objects that result from the <code>hmm.search</code> or <code>regex.search</code> function are of the <code>SeqFastadna</code> class, we can use any of the function of the <code>seqinr</code> package that use this class as well.</p>
+<p>To save the results from our example file, we would use the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">write.fasta</span>(<span class="dt">sequences =</span> <span class="kw">getSequence</span>(summary.list<span class="op">$</span>consensus.sequences), <span class="dt">names =</span> <span class="kw">getName</span>(summary.list<span class="op">$</span>consensus.sequences), <span class="dt">file.out =</span> <span class="st">&quot;RxLR_candidates.fasta&quot;</span>)</code></pre></div>
+</div>
+<div id="visualizing-the-hmm-profile-using-a-sequence-logo-like-plot" class="section level2">
+<h2>Visualizing the HMM profile using a sequence logo-like plot</h2>
+<p>To determine if the HMM profile includes the motifs of interest, we have created the function <code>hmm.logo</code>. The function <code>hmm.logo</code> reads the HMM profile (obtained from the <code>hmm.search</code> step) and uses <code>ggplot2</code> to create a bar-plot. The bar-plot will illustrate the bits (amino acid scores) of each amino acid used to construct the HMM profile according to its consensus position in the HMM profile. To learn more about sequence logo plots visit this <a href="https://en.wikipedia.org/wiki/Sequence_logo">wikipedia article</a>.</p>
+<p>The <code>hmm.logo</code> is a wrapper that parses the HMM profile table and plots the parsed table results in <code>ggplot2</code>.</p>
+<p>To visualize the sequence logo-like plot in our example data set, we use our <code>candidate.rxlr$HMM_Table</code> object in the <code>hmm.search</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hmm.logo</span>(<span class="dt">hmm.table =</span> candidate.rxlr<span class="op">$</span>HMM_Table)</code></pre></div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
