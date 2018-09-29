@@ -1,6 +1,5 @@
 # effectR: An R package to call cytoplasmic effectors
 
-[![Build Status](https://travis-ci.com/Tabima/effectR.svg?token=9dgmZbkD4jn55E4FpK6z&branch=master)](https://travis-ci.com/Tabima/effectR)
 [![CRAN version](http://www.r-pkg.org/badges/version/effectR)](https://cran.r-project.org/package=effectR)
 
 # What is *effectR*
