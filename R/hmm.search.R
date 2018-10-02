@@ -51,6 +51,9 @@ hmm.search <-  function(original.seq, regex.seq, alignment.file = NULL, save.ali
   if (is.null(alignment.file) == F & save.alignment == T ){
     stop("Alignment is provided. No new alignment to save")
   }
+  if (class(hmm.tresh) != "numeric"){
+    stop("hmm.thres requires a real number to set the bit-score threshold.")
+  }
   # All variable names
   # time.stamp <- gsub(format(Sys.time(), "%a_%b_%d_%X"), pattern = ":", replacement = "_")
   file.name <- c("REGEX.fasta")
