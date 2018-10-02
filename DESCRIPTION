@@ -1,6 +1,6 @@
 Package: effectR
 Title: Predicts Oomycete Effectors
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: c(person("Javier", "Tabima", email = "tabimaj@oregonstate.edu", role = c("aut", "cre")),person(c("Niklaus", "J."), "Grunwald", role = "ths", email =
               "grunwaln@science.oregonstate.edu"))
 Description: Predicts cytoplasmic effector proteins using genomic data by searching for motifs of interest using regular expression searches and hidden Markov models (HMM) based in Haas et al. (2009) <doi:10.1038/nature08358>. 
