@@ -6,7 +6,7 @@
 \usage{
 hmm.search(original.seq, regex.seq, alignment.file = NULL,
   save.alignment = FALSE, mafft.path = NULL, num.threads = 2,
-  hmm.path = NULL, seed = 12345)
+  hmm.tresh = 0, hmm.path = NULL, seed = 12345)
 }
 \arguments{
 \item{original.seq}{The absolute path for the original six-frame translation FASTA file}
@@ -20,6 +20,8 @@ hmm.search(original.seq, regex.seq, alignment.file = NULL,
 \item{mafft.path}{(Optional) Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the program search path.}
 
 \item{num.threads}{(Optional) Number of threads to be used by MAFFT}
+
+\item{hmm.tresh}{(Optional)  Set the bit score cutoff for the per-sequence ranked hit list to a real number. (Default = 0)}
 
 \item{hmm.path}{(Optional) Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the program search path.}
 

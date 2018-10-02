@@ -1,7 +1,6 @@
-# effectR 1.0.1 (2018-04-20)
+# effectR 1.0.2 (2018-08-02)
 
-# What's new in version 1.0.1?
+# What's new in version 1.0.2?
 
-- User can provide an alignment file for `hmm.search`
-- Users can save the alignments created by `MAFFT` within `effectR`
-- User-defined seeds in `hmm.search` for reproducibility
+- User can provide a bit-score threshold for `hmm.search`
+- New reference dataset include *P. infestans* reference RxLR and CRN proteins

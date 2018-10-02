@@ -12,12 +12,12 @@ Imports:
     shiny,
     reshape2,
     utils,
+    rmarkdown,
     viridis
 License: GPL-2 | GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
 Suggests: knitr,
-    rmarkdown,
     testthat
 VignetteBuilder: knitr

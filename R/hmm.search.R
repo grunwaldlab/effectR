@@ -7,6 +7,7 @@
 #' @param save.alignment (Optional) Save the alignment in the returning object. The MAFFT alignment will be saved as the first element of the returned object.
 #' @param mafft.path (Optional) Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the program search path.
 #' @param hmm.path (Optional) Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the program search path.
+#' @param hmm.tresh (Optional)  Set the bit score cutoff for the per-sequence ranked hit list to a real number. (Default = 0)
 #' @param num.threads (Optional) Number of threads to be used by MAFFT
 #' @param seed (Optional) The seed to used with HMMER commands. Set this to get the same output each time
 #' @keywords regex effector
@@ -38,7 +39,7 @@
 #' After the multiple sequence alignment is complete, the function constructs a HMM profile using the alignment data. The HMM profile is in the original list of \code{SeqFastadna} objects to obtain the best HMM results with sequences with RxLR or CRN motifs.
 #' @note
 #' If MAFFT/HMMER are not the program search path, the user has to specify the path for the MAFFT and the HMMER executable binaries and specify them in the \code{mafft.path} and \code{hmm.path}
-hmm.search <-  function(original.seq, regex.seq, alignment.file = NULL, save.alignment = FALSE, mafft.path = NULL, num.threads = 2, hmm.path = NULL, seed = 12345){
+hmm.search <-  function(original.seq, regex.seq, alignment.file = NULL, save.alignment = FALSE, mafft.path = NULL, num.threads = 2,  hmm.tresh = 0, hmm.path = NULL, seed = 12345){
   set.seed(seed)
   sequences <- regex.seq
   if (unique(unlist(lapply(sequences, class))) != "SeqFastadna") {
@@ -136,14 +137,14 @@ hmm.search <-  function(original.seq, regex.seq, alignment.file = NULL, save.ali
   if (Sys.info()[['sysname']] %in% "Windows"){
     hmmsearch_command <- c(get_hmmer_path("hmmsearch.exe", hmm.path),
                            "--seed", seed,
-                           "-T", "0",
+                           "-T", hmm.tresh,
                            "--tblout", hmmsearch.out,
                            hmmbuild.out,
                            original.seq)
     } else {
     hmmsearch_command <- c(get_hmmer_path("hmmsearch", hmm.path),
                          "--seed", seed,
-                         "-T", "0",
+                         "-T", hmm.tresh,
                          "--tblout", hmmsearch.out,
                          hmmbuild.out,
                          original.seq)
