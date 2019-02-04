@@ -157,7 +157,19 @@ hmm.search <-  function(original.seq, regex.seq, alignment.file = NULL, save.ali
   cat("hmmsearch finished!\n")
 
   ## Reading in hmm results
-  hmm.hits <- utils::read.delim(hmmsearch.out, comment.char = "#", header = F, sep = "", blank.lines.skip = T, stringsAsFactors = F)[,1]
+  if (file.exists(hmmsearch.out)) {
+    hmm.hits <- utils::read.delim(hmmsearch.out, comment.char = "#", header = F, sep = "", blank.lines.skip = T, stringsAsFactors = F)[,1]
+  } else {
+    if (save.alignment == T) {
+      warning("HMM failed, only returning alignment")
+      alin.seq <- seqinr::read.fasta(mafft.out.name)
+      total.seq <- list(alin.seq, regex.seq, NA, NA)
+      names(total.seq) <- c("Alignment","REGEX","HMM","HMM_Table")
+      return(total.seq)
+    } else {
+      stop("HMM failed, please supply a valid absolute path to ORFs")
+    }
+  }
   if (Sys.info()[['sysname']] %in% "Windows"){
   hmm.table <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 14, sep = "", fill = T, stringsAsFactors = F)
   } else {
