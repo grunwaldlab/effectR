@@ -1,10 +1,10 @@
 #' Searching for motifs using HMM searches
 #'
 #' This function uses MAFFT and HMMER to search for sequences with RxLR or CRN motifs using hidden markov models.
-#' @param original.seq The absolute path for the original six-frame translation FASTA file
+#' @param original.seq The absolute path for the original six-frame translation FASTA file. If an invalid or relative path is given, MAFFT alignment will still be performed on `regex-seq` as necessary.
 #' @param regex.seq A list of \code{SeqFastadna} objects resulting from \code{\link{regex.search}}. The HMM profile will be constructed using these sequences
 #' @param alignment.file (Optional) The absolute path for an alignment file of the sequences to build the hmmer profile from. It's recommended that the alignment file cointains the same sequences than the `regex.seq` files. If the user provides the absolute path, *effectR* won't use MAFFT to align the sequences and will use the alignment for the HMMER searches. If no alignment file is provided, *effectR* will use MAFFT to align the sequences from `regex.seq` and run HMMER.
-#' @param save.alignment (Optional) Save the alignment in the returning object. The MAFFT alignment will be saved as the first element of the returned object.
+#' @param save.alignment (Optional) Save the alignment in the returning object. The MAFFT alignment will be saved as the first element of the returned object. If alignment is successful but the HMM search fails, an object containing the alignment will still be returned.
 #' @param mafft.path (Optional) Local path of folder containing the MAFFT binary executable file or the executable file itself. If not specified, then MAFFT must be in the program search path.
 #' @param hmm.path (Optional) Local path of  folder containing the HMMER binaries.  If not specified, then HMMER executables must be in the program search path.
 #' @param hmm.tresh (Optional)  Set the bit score cutoff for the per-sequence ranked hit list to a real number. (Default = 0)
@@ -157,7 +157,19 @@ hmm.search <-  function(original.seq, regex.seq, alignment.file = NULL, save.ali
   cat("hmmsearch finished!\n")
 
   ## Reading in hmm results
-  hmm.hits <- utils::read.delim(hmmsearch.out, comment.char = "#", header = F, sep = "", blank.lines.skip = T, stringsAsFactors = F)[,1]
+  if (file.exists(hmmsearch.out)) {
+    hmm.hits <- utils::read.delim(hmmsearch.out, comment.char = "#", header = F, sep = "", blank.lines.skip = T, stringsAsFactors = F)[,1]
+  } else {
+    if (save.alignment == T) {
+      warning("HMM failed, only returning alignment")
+      alin.seq <- seqinr::read.fasta(mafft.out.name)
+      total.seq <- list(alin.seq, regex.seq, NA, NA)
+      names(total.seq) <- c("Alignment","REGEX","HMM","HMM_Table")
+      return(total.seq)
+    } else {
+      stop("HMM failed, please supply a valid absolute path to ORFs")
+    }
+  }
   if (Sys.info()[['sysname']] %in% "Windows"){
   hmm.table <- utils::read.table(hmmbuild.out, blank.lines.skip = T, skip = 14, sep = "", fill = T, stringsAsFactors = F)
   } else {

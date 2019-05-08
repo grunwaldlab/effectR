@@ -92,7 +92,7 @@ The `effectR` package requires all of these tools. A correct `HMMER` installatio
 
 #### Linux/OS X users 
 
-We recommend downloading and installing HMMER by following the instructions and steps in the [HMMER installation](eddylab.org/software/hmmer3/3.1b2/Userguide.pdf) web site. Make sure that you remember the directory in which `HMMER` is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:
+We recommend downloading and installing HMMER by following the instructions and steps in the [HMMER installation](http://hmmer.org/documentation.html) web site. Make sure that you remember the directory in which `HMMER` is installed, of if the installation is sucessful, make sure to obtain the path via bash/tsh/console:
 
 ```bash
 which hmmbuild
