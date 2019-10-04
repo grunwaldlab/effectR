@@ -1,6 +1,7 @@
 # effectR: An R package to call cytoplasmic effectors
 
 [![CRAN version](http://www.r-pkg.org/badges/version/effectR)](https://cran.r-project.org/package=effectR)
+[![Downloads from Rstudio mirror](http://cranlogs.r-pkg.org/badges/grand-total/effectR)](http://www.r-pkg.org/pkg/effectR)
 [![Downloads from Rstudio mirror per month](http://cranlogs.r-pkg.org/badges/effectR)](http://www.r-pkg.org/pkg/effectR)
 
 # What is *effectR*
