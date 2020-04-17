@@ -131,7 +131,7 @@ The function `regex.search` requires the list of `SeqFastadna` objects and the g
 ## Multiple sequence alignment and HMMER search
 
 To perform the HMM search and obtain all possible effector candidates from a proteome, `effectR` uses the `REGEX` results as a template to create a HMM profile and perform a search across the proteome of interest.
-We have created the `hmm.search` function in order to perfomr this search.
+We have created the `hmm.search` function in order to perform this search.
 The `hmm.search` function requires a local installation of `MAFFT` and `HMMER` in order to perform the searches. The *absolute paths* of the binaries must be specified in the `mafft.path` and `hmmer.path` options of the `hmm.search` function.
 In addition, the `hmm.function` requires the path of the original FASTA file containing the translated ORF's in the `original.seq` parameter of the function. `hmm.search` will use this file as a query in the `hmmsearch` software from HMMER, and search for all sequences with hits against the HMM profile created with the REGEX results.
 
