@@ -35,7 +35,7 @@ effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
     consensus.seq <- hmm.result
   }
   sequences <- lapply(consensus.seq, function (x) paste(unlist(x),collapse = ""))
-  if (motif == "RxLR" | motif == "Whisson2007" | motif == "whisson2007" | motif == "Win2007" | motif == "win2007"){
+  if (motif == "RxLR" | motif == "Whisson2007" | motif == "whisson2007" | motif == "Win2007" | motif == "win2007" | motif == "ai2020" | motif == "Ai2020"){
     rxlr.num <- as.numeric(gsub(pattern = " ", replacement = "",unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) length(x)))))
     rxlr.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
     if (motif == "Whisson2007" | motif == "whisson2007" | motif == "Win2007" | motif == "win2007" |
@@ -43,7 +43,11 @@ effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
         motif == "whisson2007_eer" | motif == "Whisson2007_eer" | motif == "whisson2007_EER" | motif == "Whisson2007_EER") {
       eer.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ed][ed][kr]", perl = T,ignore.case = T))), function (x) length(x)))))
       eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ed][ed][kr]", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
-    } else {
+    } else if (motif == "ai2020" | motif == "Ai2020" ) {
+      eer.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="([ed]\\w[ed][kr])|([ed][ed]\\w{0,3}[kr])", perl = T,ignore.case = T))), function (x) length(x)))))
+      eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="([ed]\\w[ed][kr])|([ed][ed]\\w{0,3}[kr])", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+    }
+    else {
       eer.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="eer", perl = T,ignore.case = T))), function (x) length(x)))))
       eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="eer", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
     }

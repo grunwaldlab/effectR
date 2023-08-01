@@ -54,6 +54,12 @@ regex.search <- function(sequence, motif = "RxLR", reg.pat = NULL){
                  motif == "whisson2007_EER" | motif == "Whisson2007_EER") {
         # Same as Whisson but only the EER motif, to add flexibility
         reg.pat <- "^\\w{10,40}\\w{1,100}\\w{1,40}[ED][ED][KR]"
+      } else if (motif == "ai2020" | motif == "Ai2020") {
+        # Ai et al. 2020 modified Whisson to find Pythium RXLRs since
+        # "... some functionally verified RXLRs contain degenerate dEER motifs (Supplementary Table S2)"
+        # > "The original regex model (SP.{1,96}R.LR.{1,40}[ED][ED][KR])
+        #    was modified (SP.{1,40}R.LR.{1,40}([ED].[ED][KR]|[ED][ED].{0,3}[KR])"
+        reg.pat <- "^\\w{10,40}\\w{1,40}R\\wLR\\w{1,40}(([ED]\\w[ED][KR])|([ED][ED]\\w{0,3}[KR]))"
       } else if (motif == "custom"){
         if (is.null(reg.pat)){
           stop("No custom REGEX pattern found.\n The 'custom' option requires a mandatory REGEX pattern")
