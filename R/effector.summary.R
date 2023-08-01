@@ -2,7 +2,7 @@
 #'
 #' This function summarize the results from \code{\link{regex.search}} or \code{\link{hmm.search}}.
 #' @param hmm.result A list of \code{SeqFastadna} objects obtained from \code{\link{regex.search}} or \code{\link{hmm.search}}
-#' @param motif A character string indicating the motif of interest. Motifs for two cytoplasmic effectors are added to the function: \code{RxLR} or \code{CRN} effectors. Each of these motifs are associated with a by-default REGEX (\code{reg.pat}). A third option, \code{custom}, allows for the search of custom motifs. The \code{custom} option requires the specification of the motif REGEX pattern in the \code{reg.pat} option, in a \code{\link{regex}} format. Default is RxLR
+#' @param motif A character string indicating the motif of interest. Motifs for two cytoplasmic effectors are added to the function: \code{RxLR} or \code{CRN} effectors. Each of these motifs are associated with a by-default REGEX (\code{reg.pat}). A third option, \code{custom}, allows for the search of custom motifs. The \code{custom} option requires the specification of the motif REGEX pattern in the \code{reg.pat} option, in a \code{\link{regex}} format. Default is RxLR. Also allowed are "Win2007", "Whisson2007", and "Whisson2007_eer".
 #' @param reg.pat A character string indicating the REGEX pattern for the \code{custom} motif. The specification of the REGEX pattern in must be in \code{\link{regex}} format. Required for \code{custom} option of \code{motif}
 #' @keywords regex effector
 #' @export
@@ -35,11 +35,18 @@ effector.summary <- function (hmm.result, motif="RxLR", reg.pat=NULL){
     consensus.seq <- hmm.result
   }
   sequences <- lapply(consensus.seq, function (x) paste(unlist(x),collapse = ""))
-  if (motif == "RxLR"){
+  if (motif == "RxLR" | motif == "Whisson2007" | motif == "whisson2007" | motif == "Win2007" | motif == "win2007"){
     rxlr.num <- as.numeric(gsub(pattern = " ", replacement = "",unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) length(x)))))
     rxlr.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="r\\wlr", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
-    eer.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="eer", perl = T,ignore.case = T))), function (x) length(x)))))
-    eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="eer", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+    if (motif == "Whisson2007" | motif == "whisson2007" | motif == "Win2007" | motif == "win2007" |
+        motif == "whisson2007_rxlr" | motif == "Whisson2007_rxlr" | motif == "whisson2007_RXLR" | motif == "Whisson2007_RXLR" |
+        motif == "whisson2007_eer" | motif == "Whisson2007_eer" | motif == "whisson2007_EER" | motif == "Whisson2007_EER") {
+      eer.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ed][ed][kr]", perl = T,ignore.case = T))), function (x) length(x)))))
+      eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="[ed][ed][kr]", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+    } else {
+      eer.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="eer", perl = T,ignore.case = T))), function (x) length(x)))))
+      eer.motif <- unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="eer", perl = T,ignore.case = T))), function (x) paste(x,collapse = ",")))
+    }
     motifs <- data.frame(seqinr::getName(consensus.seq),rxlr.num,rxlr.motif,eer.num,eer.motif, stringsAsFactors = F)
   } else if (motif == "CRN") {
     lflak.num <- as.numeric(gsub(pattern = " ", replacement = "", unlist(lapply(lapply(sequences, function (x) unlist(gregexpr(x, pattern="lflak", perl = T,ignore.case = T))), function (x) length(x)))))
